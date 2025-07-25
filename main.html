@@ -3,126 +3,447 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>hellohello</title>
+    <title>Finance SaaS Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-        
-        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1e1e1e;
-            color: #e0e0e0;
-            height: 100vh;
-            overflow: hidden;
         }
-        
-        .header {
-            background-color: #252526;
-            padding: 12px 20px;
-            border-bottom: 1px solid #3c3c3c;
+
+        :root {
+            --primary-dark: #1a2236;
+            --secondary-dark: #222c44;
+            --accent-blue: #4a6fff;
+            --accent-green: #0abb87;
+            --light-bg: #f6f8fc;
+            --border-light: #ebedf3;
+            --text-dark: #1a1f36;
+            --text-light: #8a96a8;
+            --white: #ffffff;
         }
-        
-        .header-title {
+
+        body {
+            background-color: var(--light-bg);
+            display: flex;
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow: hidden; /* 隐藏默认滚动条 */
+        }
+
+        /* 左侧菜单 */
+        .sidebar {
+            width: 250px;
+            background: var(--white);
+            padding: 25px 0;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .logo-container {
+            padding: 0 25px 20px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .logo-text span {
+            font-size: 12px;
+            color: var(--text-light);
+            display: block;
+            font-weight: 400;
+        }
+
+        .menu-title {
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            padding: 15px 25px 10px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 5px;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(74, 111, 255, 0.08);
+            color: var(--accent-blue);
+            border-left: 3px solid var(--accent-blue);
+            padding-left: 22px;
+        }
+
+        .menu-item.active {
+            background-color: rgba(74, 111, 255, 0.1);
+            color: var(--accent-blue);
+            border-left: 3px solid var(--accent-blue);
+            font-weight: 500;
+            padding-left: 22px;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* 确保占满视口高度 */
+        }
+
+        /* 顶部导航 */
+        .top-nav {
+            background: var(--primary-dark);
+            color: var(--white);
+            padding: 0 25px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .brand-logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .search-box {
+            background: var(--secondary-dark);
+            border-radius: 8px;
+            padding: 10px 15px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
-        .icon {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            margin-right: 8px;
+
+        .search-box i {
+            color: var(--text-light);
+            font-size: 14px;
         }
-        
-        .icon-orange {
-            color: #ff845e;
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 14px;
+            min-width: 250px;
+            outline: none;
         }
-        
-        .icon-blue {
-            color: #4ec9ff;
+
+        .search-box input::placeholder {
+            color: var(--text-light);
         }
-        
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            height: calc(100vh - 55px);
-            gap: 1px;
-            background-color: #3c3c3c;
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
-        
-        .panel {
-            background-color: #1e1e1e;
+
+        .nav-icon {
             position: relative;
-            overflow: hidden;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+
+        .nav-icon:hover {
+            color: var(--white);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background-color: var(--accent-green);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* ================== 修改仪表盘网格布局 ================== */
+        .dashboard-container {
+            flex: 1;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr; /* 单列布局 */
+            grid-template-rows: 500px 500px 500px; /* 三行固定高度 */
+            gap: 20px;
+            overflow-y: auto; /* 启用整个页面滚动 */
+            height: 100%; /* 占满可用空间 */
+        }
+        
+        .top-combined {
+            grid-column: 1 / -1; /* 跨整个宽度 */
+            grid-row: 1; /* 占据第一行 */
+        }
+        
+        .dashboard-panel {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* 隐藏溢出内容 */
         }
         
         .panel-header {
-            padding: 8px 12px;
-            background-color: #2a2a2a;
-            border-bottom: 1px solid #3c3c3c;
+            padding: 15px 20px;
+            background-color: #f8f9fc;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .panel-header i {
+            color: var(--accent-blue);
             font-size: 14px;
         }
         
-        iframe {
-            width: 100%;
-            height: calc(100% - 33px);
-            border: none;
-            background-color: #1e1e1e;
+        .panel-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-light);
         }
         
-        #top-left { grid-area: 1 / 1 / 2 / 2; }
-        #top-right { grid-area: 1 / 2 / 2 / 3; }
-        #bottom-left { grid-area: 2 / 1 / 3 / 2; }
-        #bottom-right { grid-area: 2 / 2 / 3 / 3; }
+        .iframe-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        .dashboard-panel iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: transparent;
+            overflow: hidden; /* 隐藏iframe内部滚动条 */
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+            }
+            .logo-text, .menu-title, .menu-item span {
+                display: none;
+            }
+            .menu-item {
+                justify-content: center;
+                padding-left: 25px;
+            }
+            .dashboard-container {
+                grid-template-rows: repeat(3, 400px); /* 三行固定高度 */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-box input {
+                display: none;
+            }
+            .search-box {
+                padding: 10px;
+                min-width: auto;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-title">
-            <span class="icon icon-orange">▶</span>
-            <h1>数据分析仪表板</h1>
+    <!-- 侧边导航栏 -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <div class="logo-icon">7</div>
+            <div class="logo-text">
+                Portfolio Management
+            </div>
+        </div>
+        
+        <div class="menu-title">main menu</div>
+        
+        <div class="menu-item active">
+            <i class="fas fa-chart-pie"></i>
+            <span>Dashboard</span>
+        </div>
+        
+        <div class="menu-item">
+            <i class="fas fa-copy"></i>
+            <span>Asset Allocation</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-th-large"></i>
+            <span>Watchlist</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-puzzle-piece"></i>
+            <span>Market Quotes</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-cube"></i>
+            <span>Watchlist Order</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Stock</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Charts</span>
         </div>
     </div>
     
-    <div class="container">
-        <!-- 左上区域 - 今日市场状况 -->
-        <div class="panel" id="top-left">
-            <div class="panel-header">
-                <span class="icon icon-orange">▶</span> TodayMarketConditions.html
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <!-- 顶部导航栏 -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <div class="brand-logo">Portfolio</div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search here...">
+                </div>
             </div>
-            <iframe src="TodayMarketConditions.html" title="今日市场状况"></iframe>
+            
+            <div class="nav-right">
+                <div class="nav-icon">
+                    <i class="fas fa-file"></i>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-badge">3</div>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-envelope"></i>
+                    <div class="notification-badge">7</div>
+                </div>
+                <div class="user-avatar">JS</div>
+                <div class="nav-icon">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
         </div>
         
-        <!-- 右上区域 - 资产数据 -->
-        <div class="panel" id="top-right">
-            <div class="panel-header">
-                <span class="icon icon-orange">▶</span> AssetData.html
+        <!-- ================== 修改后的仪表盘 ================== -->
+        <div class="dashboard-container">
+            <!-- 合并的顶部区域 -->
+            <div class="dashboard-panel top-combined">
+                <div class="panel-header">
+                    <i class="fas fa-chart-line"></i>
+                    <div class="panel-title">综合市场分析</div>
+                </div>
+                <div class="iframe-container">
+                    <iframe src="CombinedMarketAnalysis.html" title="综合市场分析"></iframe>
+                </div>
             </div>
-            <iframe src="AssetData.html" title="资产数据"></iframe>
-        </div>
-        
-        <!-- 左下区域 - 收益分布 -->
-        <div class="panel" id="bottom-left">
-            <div class="panel-header">
-                <span class="icon icon-orange">▶</span> IncomeDistribution.html
+            
+            <!-- 左下区域 -->
+            <div class="dashboard-panel">
+                <div class="panel-header">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <div class="panel-title">收益分布</div>
+                </div>
+                <div class="iframe-container">
+                    <iframe src="IncomeDistribution.html" title="收益分布"></iframe>
+                </div>
             </div>
-            <iframe src="IncomeDistribution.html" title="收益分布"></iframe>
-        </div>
-        
-        <!-- 右下区域 - 自选资产 -->
-        <div class="panel" id="bottom-right">
-            <div class="panel-header">
-                <span class="icon icon-orange">▶</span> Self-selected.html
+            
+            <!-- 右下区域 -->
+            <div class="dashboard-panel">
+                <div class="panel-header">
+                    <i class="fas fa-star"></i>
+                    <div class="panel-title">自选资产</div>
+                </div>
+                <div class="iframe-container">
+                    <iframe src="Self-selected.html" title="自选资产"></iframe>
+                </div>
             </div>
-            <iframe src="Self-selected.html" title="自选资产"></iframe>
         </div>
-
-        
     </div>
+
+    <script>
+        // 菜单项交互
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 使iframe加载失败时显示错误信息
+        const iframes = document.querySelectorAll('iframe');
+        iframes.forEach(iframe => {
+            iframe.addEventListener('error', function() {
+                const container = this.parentElement;
+                container.innerHTML = `
+                    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#777;padding:20px;text-align:center;">
+                        <i class="fas fa-exclamation-triangle" style="font-size:40px;margin-bottom:15px;color:#ff7043;"></i>
+                        <h3 style="margin-bottom:10px;">无法加载组件</h3>
+                        <p style="max-width:300px;">文件 ${this.src} 未找到或无法加载<br>请确保文件已放置在同目录下</p>
+                    </div>
+                `;
+            });
+        });
+    </script>
 </body>
 </html>

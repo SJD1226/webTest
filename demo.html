@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金融仪表板</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f2f5 0%, #e4e7eb 100%);
+            color: #1a1d28;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            padding: 25px;
+        }
+        
+        .panel {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .panel:last-child {
+            margin-bottom: 0;
+        }
+        
+        .panel-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1d28;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #f0f3fa;
+            padding-bottom: 15px;
+        }
+        
+        .assets-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .assets-table th {
+            text-align: left;
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 600;
+            padding: 12px 10px;
+            border-bottom: 1px solid #f0f3fa;
+        }
+        
+        .assets-table td {
+            padding: 16px 10px;
+            border-bottom: 1px solid #f0f3fa;
+            font-weight: 500;
+        }
+        
+        .asset-name {
+            font-weight: 600;
+        }
+        
+        .positive-change {
+            color: #0dbd70;
+            font-weight: 700;
+        }
+        
+        .negative-change {
+            color: #f1403d;
+            font-weight: 700;
+        }
+        
+        .rank {
+            background: #f0f3fa;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .cash-balance {
+            background: #f0f8ff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            font-weight: 600;
+            color: #2a5dff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 250px;
+        }
+        
+        .radar-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7280;
+            padding: 0 20px;
+        }
+        
+        .time-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .time-tab {
+            padding: 8px 16px;
+            background: #f8f9fc;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .time-tab.active {
+            background: #2a5dff;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .continuous-earnings {
+            background: #f0f8ff;
+            border-radius: 16px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .continuous-earnings-text {
+            font-weight: 600;
+            color: #2a5dff;
+        }
+        
+        .show-earnings {
+            background: #2a5dff;
+            color: white;
+            border-radius: 16px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1d28;
+        }
+        
+        .calendar-arrows {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .arrow-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f0f3fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        
+        .day-header {
+            text-align: center;
+            padding: 12px 0;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .day-cell {
+            background: #f8f9fc;
+            border-radius: 12px;
+            aspect-ratio: 1/1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .day-number {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .day-earning {
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .positive-earning {
+            color: #0dbd70;
+        }
+        
+        .negative-earning {
+            color: #f1403d;
+        }
+        
+        .today-cell {
+            border: 2px solid #2a5dff;
+            background: #f0f8ff;
+        }
+        
+        .today-text {
+            font-size: 14px;
+            color: #2a5dff;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        
+        .cash-icon {
+            font-size: 20px;
+        }
+        
+        .update-notice {
+            font-size: 12px;
+            color: #6b7280;
+            text-align: right;
+            margin-top: 10px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: center;
+            position: relative;
+            padding: 0 0 25px;
+        }
+        
+        .header .tabs {
+            display: flex;
+            background: #f0f3fa;
+            border-radius: 24px;
+            padding: 4px;
+        }
+        
+        .tab-item {
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-item.active {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            color: #2a5dff;
+        }
+        
+        .category-tabs {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 0 0 15px;
+            margin-bottom: 20px;
+            scrollbar-width: none;
+        }
+        
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .category-tab {
+            padding: 8px 16px;
+            background: #f0f3fa;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .category-tab.active {
+            background: #2a5dff;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .time-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+        
+        .trade-time {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .indices-container {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .index-card {
+            background: white;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            min-width: 180px;
+            flex: 1;
+        }
+        
+        .index-name {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .index-value {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .index-change {
+            display: flex;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .index-change.negative {
+            color: #f1403d;
+        }
+        
+        .index-change.positive {
+            color: #0dbd70;
+        }
+        
+        .market-overview {
+            background: white;
+            border-radius: 16px;
+            padding: 22px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+        
+        .market-overview-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: #f8f9fc;
+            border-radius: 14px;
+            padding: 15px;
+        }
+        
+        .stat-title {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .up-down-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .stat-item .label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .stat-item .value {
+            font-weight: 700;
+        }
+        
+        .positive-value {
+            color: #0dbd70;
+        }
+        
+        .negative-value {
+            color: #f1403d;
+        }
+        
+        .volume-info {
+            background: #f0f8ff;
+            border-radius: 14px;
+            padding: 15px;
+        }
+        
+        .volume-value {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: #2a5dff;
+        }
+        
+        .volume-change {
+            font-size: 14px;
+            color: #0dbd70;
+            font-weight: 600;
+        }
+        
+        .bar-graph {
+            height: 6px;
+            background: #f0f3fa;
+            border-radius: 3px;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bar-graph-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 38%;
+            background: linear-gradient(90deg, #0dbd70, #2a5dff);
+            border-radius: 3px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #1a1d28;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f3fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- 左列：收益分布 -->
+        <div class="dashboard-section">
+            <h2 class="section-title">个人资产分析</h2>
+            
+            <!-- 收益分布 -->
+            <div class="panel">
+                <div class="panel-title">收益分布</div>
+                
+                <div class="time-tabs">
+                    <div class="time-tab">日</div>
+                    <div class="time-tab">周</div>
+                    <div class="time-tab active">月</div>
+                    <div class="time-tab">年</div>
+                </div>
+                
+                <div class="continuous-earnings">
+                    <span class="continuous-earnings-text">您本月已连续9天正收益，点击晒晒收益连红</span>
+                    <div class="show-earnings">晒收益</div>
+                </div>
+                
+                <div class="calendar-header">
+                    <div class="calendar-title">2025年7月</div>
+                    <div class="calendar-arrows">
+                        <div class="arrow-btn"><i class="fas fa-chevron-left"></i></div>
+                        <div class="arrow-btn"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                
+                <div class="calendar-grid">
+                    <div class="day-header">一</div>
+                    <div class="day-header">二</div>
+                    <div class="day-header">三</div>
+                    <div class="day-header">四</div>
+                    <div class="day-header">五</div>
+                    <div class="day-header">六</div>
+                    <div class="day-header">日</div>
+                    
+                    <!-- 日历内容 -->
+                    <div class="day-cell"></div>
+                    <div class="day-cell"></div>
+                    <div class="day-cell"></div>
+                    <div class="day-cell"></div>
+                    <div class="day-cell">
+                        <div class="day-number">1</div>
+                        <div class="day-earning positive-earning">+0.53</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">2</div>
+                        <div class="day-earning negative-earning">-39.08</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">3</div>
+                        <div class="day-earning positive-earning">+379.24</div>
+                    </div>
+                    
+                    <div class="day-cell">
+                        <div class="day-number">4</div>
+                        <div class="day-earning negative-earning">-180.91</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">5</div>
+                        <div class="day-earning positive-earning">+31.99</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">6</div>
+                        <div class="day-earning positive-earning">+265.90</div>
+                    </div>
+                    <div class="day-cell"></div>
+                    <div class="day-cell"></div>
+                    <div class="day-cell"></div>
+                    
+                    <div class="day-cell"></div>
+                    <div class="day-cell"></div>
+                    <div class="day-cell">
+                        <div class="day-number">13</div>
+                        <div class="day-earning positive-earning">+0.96</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">14</div>
+                        <div class="day-earning positive-earning">+229.12</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">15</div>
+                        <div class="day-earning positive-earning">+282.35</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">16</div>
+                        <div class="day-earning positive-earning">+95.37</div>
+                    </div>
+                    
+                    <div class="day-cell">
+                        <div class="day-number">17</div>
+                        <div class="day-earning positive-earning">+334.75</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">18</div>
+                        <div class="day-earning positive-earning">+320.92</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">19</div>
+                        <div class="day-earning">0.00</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">20</div>
+                        <div class="day-earning">0.00</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">21</div>
+                        <div class="day-earning positive-earning">+120.88</div>
+                    </div>
+                    <div class="day-cell"></div>
+                    
+                    <div class="day-cell"></div>
+                    <div class="day-cell">
+                        <div class="day-number">22</div>
+                        <div class="day-earning negative-earning">-1.72</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">23</div>
+                        <div class="day-earning positive-earning">+248.44</div>
+                    </div>
+                    <div class="day-cell today-cell">
+                        <div class="day-number">24</div>
+                        <div class="day-earning positive-earning">+198.07</div>
+                        <div class="today-text">今</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">25</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">26</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">27</div>
+                        <div class="day-earning positive-earning">+1.05</div>
+                    </div>
+                    
+                    <div class="day-cell">
+                        <div class="day-number">28</div>
+                        <div class="day-earning positive-earning">+0.96</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">29</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">30</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">31</div>
+                    </div>
+                    <div class="day-cell"></div>
+                    <div class="day-cell"></div>
+                </div>
+                
+                <div class="update-notice">更新</div>
+            </div>
+        </div>
+        
+        <!-- 中列：雷达图和资产列表 -->
+        <div class="dashboard-section">
+            <h2 class="section-title">资产分析</h2>
+            
+            <!-- 雷达图 -->
+            <div class="panel">
+                <div class="panel-title">雷达图</div>
+                
+                <div class="chart-wrapper">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                
+                <div class="radar-labels">
+                    <span>可复制性</span>
+                    <span>持股分散度</span>
+                    <span>盈利能力</span>
+                    <span>抗风险能力</span>
+                    <span>稳定性</span>
+                </div>
+            </div>
+            
+            <!-- 资产列表 -->
+            <div class="panel">
+                <div class="panel-title">
+                    <span>资产列表</span>
+                    <div>排序</div>
+                </div>
+                
+                <table class="assets-table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>持仓</th>
+                            <th>实时涨跌</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="asset-name">股票A</td>
+                            <td>10000</td>
+                            <td class="positive-change">+3.2%</td>
+                            <td><div class="rank">1</div></td>
+                        </tr>
+                        <tr>
+                            <td class="asset-name">股票B</td>
+                            <td>8000</td>
+                            <td class="positive-change">+2.7%</td>
+                            <td><div class="rank">2</div></td>
+                        </tr>
+                        <tr>
+                            <td class="asset-name">债券C</td>
+                            <td>8000</td>
+                            <td class="positive-change">+2.8%</td>
+                            <td><div class="rank">1</div></td>
+                        </tr>
+                        <tr>
+                            <td class="asset-name">基金D</td>
+                            <td>8000</td>
+                            <td class="positive-change">+2.7%</td>
+                            <td><div class="rank">2</div></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="cash-balance">
+                    <i class="fas fa-money-bill-wave cash-icon"></i>
+                    <span>现金：20000</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 右列：市场行情分析 -->
+        <div class="dashboard-section">
+            <h2 class="section-title">市场行情分析</h2>
+            
+            <div class="header">
+                <div class="tabs">
+                    <div class="tab-item active">今日行情</div>
+                </div>
+            </div>
+            
+            <div class="category-tabs">
+                <div class="category-tab active">沪深</div>
+                <div class="category-tab">港股</div>
+                <div class="category-tab">美股</div>
+                <div class="category-tab">黄金</div>
+                <div class="category-tab">国内债</div>
+            </div>
+            
+            <div class="time-container">
+                <div class="trade-time">交易中 2025-07-25 11:03</div>
+            </div>
+            
+            <div class="indices-container">
+                <div class="index-card">
+                    <div class="index-name">上证指数</div>
+                    <div class="index-value">3593.25</div>
+                    <div class="index-change negative">
+                        <span>-12.48</span>
+                        <span>-0.35%</span>
+                    </div>
+                </div>
+                
+                <div class="index-card">
+                    <div class="index-name">深证成指</div>
+                    <div class="index-value">11155.52</div>
+                    <div class="index-change negative">
+                        <span>-37.54</span>
+                        <span>-0.34%</span>
+                    </div>
+                </div>
+                
+                <div class="index-card">
+                    <div class="index-name">创业板指</div>
+                    <div class="index-value">2336.72</div>
+                    <div class="index-change negative">
+                        <span>-8.64</span>
+                        <span>-0.37%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="market-overview">
+                <div class="market-overview-title">
+                    <i class="fas fa-chart-pie"></i> 市场总览
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-title">涨跌分布</div>
+                        <div class="up-down-stats">
+                            <div class="stat-item">
+                                <span class="label">家上涨</span>
+                                <span class="value">38%</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="label">涨</span>
+                                <span class="value positive-value">2072</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="label">3153 跌</span>
+                                <span class="value negative-value"></span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="label">涨停</span>
+                                <span class="value positive-value">34</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="label">跌停</span>
+                                <span class="value negative-value">5</span>
+                            </div>
+                        </div>
+                        <div class="bar-graph">
+                            <div class="bar-graph-fill"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="volume-info">
+                        <div class="stat-title">成交量</div>
+                        <div class="volume-value">10055亿</div>
+                        <div class="stat-desc">两市共10055亿</div>
+                        <div class="volume-change">
+                            <i class="fas fa-arrow-up"></i> 增量129亿
+                        </div>
+                        <div class="stat-desc">较上日+1%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 雷达图数据
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        const radarChart = new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['盈利能力', '抗风险能力', '可复制性', '持股分散度', '稳定性'],
+                datasets: [{
+                    label: '评估指标',
+                    data: [40, 55, 35, 45, 50],
+                    fill: true,
+                    backgroundColor: 'rgba(255, 107, 107, 0.4)',
+                    borderColor: '#f1403d',
+                    pointBackgroundColor: '#f1403d',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        min: 0,
+                        max: 60,
+                        ticks: {
+                            stepSize: 15,
+                            display: false
+                        },
+                        grid: {
+                            color: 'rgba(240, 243, 250, 0.8)',
+                            lineWidth: 1.5
+                        },
+                        angleLines: {
+                            color: 'rgba(240, 243, 250, 0.8)',
+                            lineWidth: 1.5
+                        },
+                        pointLabels: {
+                            display: false,
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // 时间筛选交互
+        const timeTabs = document.querySelectorAll('.time-tab');
+        timeTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                timeTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 分类标签交互
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.category-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
