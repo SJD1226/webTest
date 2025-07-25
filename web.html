@@ -1,686 +1,580 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>投资组合管理</title>
+    <title>Finance SaaS Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #2962ff;
-            --secondary: #5e35b1;
-            --success: #43a047;
-            --warning: #ff9800;
-            --danger: #e53935;
-            --light-bg: #f5f7ff;
-            --dark-text: #263238;
-            --gray-bg: #f0f2f5;
-            --card-bg: #ffffff;
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
+        :root {
+            --primary-dark: #1a2236;
+            --secondary-dark: #222c44;
+            --accent-blue: #4a6fff;
+            --accent-green: #0abb87;
+            --light-bg: #f6f8fc;
+            --border-light: #ebedf3;
+            --text-dark: #1a1f36;
+            --text-light: #8a96a8;
+            --white: #ffffff;
+        }
+
         body {
             background-color: var(--light-bg);
-            color: var(--dark-text);
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            grid-template-rows: 80px 1fr;
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        /* 顶部导航栏 */
-        header {
-            grid-column: 1 / 3;
-            grid-row: 1;
             display: flex;
-            align-items: center;
-            padding: 0 25px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            z-index: 10;
+            min-height: 100vh;
+            color: var(--text-dark);
         }
-        
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            margin-right: 25px;
-            letter-spacing: 1px;
-        }
-        
-        .search-container {
-            flex: 1;
-            max-width: 600px;
-        }
-        
-        .search-container input {
-            width: 100%;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            font-size: 16px;
-            transition: background 0.3s;
-        }
-        
-        .search-container input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .search-container input:focus {
-            background: rgba(255, 255, 255, 0.25);
-            outline: none;
-        }
-        
-        .tools {
-            display: flex;
-            align-items: center;
-            gap: 22px;
-            margin-left: 25px;
-        }
-        
-        .tool-icon {
-            font-size: 22px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .tool-icon:hover {
-            transform: scale(1.15);
-            color: #ffd166;
-        }
-        
-        /* 左侧用户信息栏 */
+
+        /* 左侧菜单 */
         .sidebar {
-            grid-column: 1;
-            grid-row: 2;
-            background-color: var(--card-bg);
-            padding: 30px 20px;
-            box-shadow: 4px 0 8px rgba(0, 0, 0, 0.05);
-            overflow-y: auto;
+            width: 250px;
+            background: var(--white);
+            padding: 25px 0;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
         }
-        
-        .user-profile {
+
+        .logo-container {
+            padding: 0 25px 20px;
+            border-bottom: 1px solid var(--border-light);
             display: flex;
-            flex-direction: column;
             align-items: center;
-            margin-bottom: 35px;
-            padding-bottom: 25px;
-            border-bottom: 1px solid var(--gray-bg);
+            gap: 10px;
+            margin-bottom: 20px;
         }
-        
-        .avatar {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 40px;
-            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 20px;
         }
-        
-        .user-name {
-            font-size: 22px;
+
+        .logo-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .logo-text span {
+            font-size: 12px;
+            color: var(--text-light);
+            display: block;
+            font-weight: 400;
+        }
+
+        .menu-title {
+            text-transform: uppercase;
+            font-size: 12px;
             font-weight: 600;
-            margin-bottom: 8px;
+            color: var(--text-light);
+            padding: 15px 25px 10px;
+            letter-spacing: 1px;
         }
-        
-        .user-role {
-            color: var(--secondary);
-            background-color: rgba(94, 53, 177, 0.1);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-        
-        .stats-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        
-        .stat-card {
-            background-color: white;
-            border-radius: 12px;
-            padding: 18px 15px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-3px);
-        }
-        
-        .stat-title {
-            font-size: 14px;
-            color: #78909c;
-            margin-bottom: 8px;
-        }
-        
-        .stat-value {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-        
-        .stat-difference {
-            font-size: 13px;
+
+        .menu-item {
+            padding: 12px 25px;
             display: flex;
             align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 5px;
         }
-        
-        .positive {
-            color: var(--success);
+
+        .menu-item:hover {
+            background-color: rgba(74, 111, 255, 0.08);
+            color: var(--accent-blue);
+            border-left: 3px solid var(--accent-blue);
+            padding-left: 22px;
         }
-        
-        .negative {
-            color: var(--danger);
+
+        .menu-item.active {
+            background-color: rgba(74, 111, 255, 0.1);
+            color: var(--accent-blue);
+            border-left: 3px solid var(--accent-blue);
+            font-weight: 500;
+            padding-left: 22px;
         }
-        
+
         /* 主内容区 */
-        main {
-            grid-column: 2;
-            grid-row: 2;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 顶部导航 */
+        .top-nav {
+            background: var(--primary-dark);
+            color: var(--white);
+            padding: 0 25px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
             gap: 25px;
+        }
+
+        .brand-logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .search-box {
+            background: var(--secondary-dark);
+            border-radius: 8px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box i {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 14px;
+            min-width: 250px;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-light);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-icon {
+            position: relative;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+
+        .nav-icon:hover {
+            color: var(--white);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background-color: var(--accent-green);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .page-content {
+            flex: 1;
             padding: 30px;
             overflow-y: auto;
         }
-        
-        .section-card {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+        .content-header {
+            margin-bottom: 30px;
+        }
+
+        .content-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .content-header p {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        /* 仪表板卡片 */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: var(--white);
+            border-radius: 12px;
             padding: 25px;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-light);
         }
-        
-        .section-card:hover {
-            transform: translateY(-5px);
-        }
-        
+
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
-        
+
         .card-title {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 600;
-            color: var(--dark-text);
+            color: var(--text-light);
         }
-        
-        .card-actions {
-            display: flex;
-            gap: 12px;
-        }
-        
-        .action-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(41, 98, 255, 0.1);
-            color: var(--primary);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .action-btn:hover {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        /* 资产分配 */
-        .asset-allocation {
-            grid-column: 1;
-            grid-row: 1;
-            background: linear-gradient(135deg, rgba(41, 98, 255, 0.03), rgba(94, 53, 177, 0.03));
-            border: 1px solid rgba(94, 53, 177, 0.1);
-        }
-        
-        .allocation-chart {
-            height: 220px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 20px 0;
-        }
-        
-        .chart-container {
-            width: 200px;
-            height: 200px;
-            position: relative;
-        }
-        
-        .donut-chart {
-            width: 100%;
-            height: 100%;
-        }
-        
-        .chart-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
-        
-        .chart-total {
-            font-size: 26px;
+
+        .metric-value {
+            font-size: 32px;
             font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
         }
-        
-        .chart-label {
-            font-size: 14px;
-            color: #78909c;
-        }
-        
-        /* 热门资产 */
-        .top-assets {
-            grid-column: 2;
-            grid-row: 1;
-        }
-        
-        .asset-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-        
-        .asset-table th {
-            text-align: left;
-            padding: 8px 0;
-            font-weight: 600;
-            color: #78909c;
-        }
-        
-        .asset-table td {
-            padding: 12px 0;
-            border-bottom: 1px solid var(--gray-bg);
-        }
-        
-        .asset-name {
-            font-weight: 600;
+
+        .metric-change {
             display: flex;
             align-items: center;
+            font-size: 14px;
+            color: var(--accent-green);
+            font-weight: 600;
         }
-        
-        .symbol {
-            background-color: rgba(67, 160, 71, 0.15);
-            color: var(--success);
-            padding: 3px 8px;
-            border-radius: 4px;
+
+        .metric-change i {
+            margin-right: 5px;
             font-size: 12px;
-            margin-right: 10px;
-            width: 40px;
-            text-align: center;
         }
-        
-        .change-positive {
-            color: var(--success);
-            font-weight: 600;
+
+        /* 图表区域 */
+        .chart-container {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-light);
+            margin-bottom: 30px;
         }
-        
-        .change-negative {
-            color: var(--danger);
-            font-weight: 600;
-        }
-        
-        /* 投资表现 */
-        .portfolio-performance {
-            grid-column: 1;
-            grid-row: 2;
-        }
-        
-        .chart-placeholder {
-            background: linear-gradient(135deg, rgba(255, 152, 0, 0.05), rgba(255, 152, 0, 0.01));
-            border-radius: 8px;
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--warning);
-            font-weight: 500;
-            margin-top: 15px;
-        }
-        
-        /* 风险评估 */
-        .risk-assessment {
-            grid-column: 2;
-            grid-row: 2;
-            background: linear-gradient(135deg, rgba(229, 57, 53, 0.02), rgba(229, 57, 53, 0.01));
-            border: 1px solid rgba(229, 57, 53, 0.1);
-        }
-        
-        .risk-container {
-            display: flex;
-            gap: 30px;
-            margin-top: 10px;
-        }
-        
-        .risk-meter {
-            width: 140px;
-            text-align: center;
-        }
-        
-        .meter {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            background: conic-gradient(
-                var(--success) 0deg 60deg,
-                var(--warning) 60deg 180deg,
-                var(--danger) 180deg 360deg
-            );
-            position: relative;
-            margin: 20px auto;
-        }
-        
-        .meter::after {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            right: 10px;
-            bottom: 10px;
-            background: white;
-            border-radius: 50%;
-        }
-        
-        .risk-indicator {
-            position: absolute;
-            width: 4px;
-            height: 65px;
-            background-color: var(--dark-text);
-            bottom: 10px;
-            left: 50%;
-            transform-origin: bottom center;
-            transform: translateX(-50%) rotate(45deg);
-            z-index: 1;
-        }
-        
-        .risk-label {
-            margin-top: 10px;
-            font-weight: 600;
-            font-size: 22px;
-        }
-        
-        .risk-description {
-            font-size: 14px;
-            color: #78909c;
-            margin-top: 20px;
-        }
-        
-        .risk-summary {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .risk-item {
+
+        .chart-header {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--gray-bg);
+            align-items: center;
+            margin-bottom: 20px;
         }
-        
-        .risk-name {
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .chart-btn {
+            padding: 8px 15px;
+            border-radius: 8px;
+            background: var(--light-bg);
+            border: 1px solid var(--border-light);
+            color: var(--text-dark);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
             font-size: 14px;
-            color: #607d8b;
         }
-        
-        .risk-value {
-            font-weight: 600;
+
+        .chart-btn:hover {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .chart-placeholder {
+            height: 350px;
+            background: var(--light-bg);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+            }
+            .logo-text, .menu-title, .menu-item span {
+                display: none;
+            }
+            .menu-item {
+                justify-content: center;
+                padding-left: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-box input {
+                display: none;
+            }
+            .search-box {
+                padding: 10px;
+                min-width: auto;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 顶部导航 -->
-    <header>
-        <div class="logo">Portfolio Management</div>
-        <div class="search-container">
-            <input type="text" placeholder="搜索资产、组合或报告...">
-        </div>
-        <div class="tools">
-            <div class="tool-icon"><i class="fas fa-robot"></i></div>
-            <div class="tool-icon"><i class="fas fa-volume-up"></i></div>
-            <div class="tool-icon"><i class="fas fa-cog"></i></div>
-        </div>
-    </header>
-    
-    <!-- 左侧用户信息 -->
-    <aside class="sidebar">
-        <div class="user-profile">
-            <div class="avatar">
-                <i class="fas fa-user"></i>
+    <!-- 侧边导航栏 -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <div class="logo-icon">dp</div>
+            <div class="logo-text">
+                Finance SaaS Dashboard
+                <span>Live Demo Preview</span>
             </div>
-            <h2 class="user-name">张小明</h2>
-            <span class="user-role">高级投资者</span>
         </div>
         
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-title">总资产净值</div>
-                <div class="stat-value">¥1,245,800</div>
-                <div class="stat-difference positive">
-                    <i class="fas fa-arrow-up"></i> +4.2% (24H)
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-title">现金余额</div>
-                <div class="stat-value">¥245,600</div>
-                <div class="stat-difference">
-                    <i class="fas fa-sync-alt"></i> 实时同步
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-title">今年回报</div>
-                <div class="stat-value">+12.5%</div>
-                <div class="stat-difference positive">
-                    <i class="fas fa-trophy"></i> 跑赢大盘
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-title">投资目标</div>
-                <div class="stat-value">稳健增长</div>
-                <div class="stat-difference">
-                    <i class="fas fa-bullseye"></i> 进度86%
-                </div>
-            </div>
+        <div class="menu-title">主菜单</div>
+        <div class="menu-item active">
+            <i class="fas fa-chart-pie"></i>
+            <span>Dashboard</span>
         </div>
-    </aside>
+        
+        <div class="menu-title">组件</div>
+        <div class="menu-item">
+            <i class="fas fa-copy"></i>
+            <span>Pages</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-th-large"></i>
+            <span>Applications</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-puzzle-piece"></i>
+            <span>UI Component</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-cube"></i>
+            <span>Widgets</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Forms</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Charts</span>
+        </div>
+    </div>
     
     <!-- 主内容区 -->
-    <main>
-        <!-- 资产分配 -->
-        <section class="section-card asset-allocation">
-            <div class="card-header">
-                <h3 class="card-title">资产分配</h3>
-                <div class="card-actions">
-                    <div class="action-btn"><i class="fas fa-download"></i></div>
-                    <div class="action-btn"><i class="fas fa-expand"></i></div>
+    <div class="main-content">
+        <!-- 顶部导航栏 -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <div class="brand-logo">Finance</div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search here...">
                 </div>
             </div>
-            <div class="allocation-chart">
-                <div class="chart-container">
-                    <svg class="donut-chart" viewBox="0 0 120 120">
-                        <circle cx="60" cy="60" r="50" fill="none" stroke="#42a5f5" stroke-width="20" stroke-dasharray="125.6 100.48" />
-                        <circle cx="60" cy="60" r="50" fill="none" stroke="#5c6bc0" stroke-width="20" stroke-dasharray="62.8 163.28" stroke-dashoffset="-62.8" />
-                        <circle cx="60" cy="60" r="50" fill="none" stroke="#66bb6a" stroke-width="20" stroke-dasharray="50.24 175.84" stroke-dashoffset="-113.04" />
-                        <circle cx="60" cy="60" r="50" fill="none" stroke="#ffb74d" stroke-width="20" stroke-dasharray="31.4 194.68" stroke-dashoffset="-136.64" />
-                    </svg>
-                    <div class="chart-center">
-                        <div class="chart-total">8类</div>
-                        <div class="chart-label">资产类型</div>
-                    </div>
+            
+            <div class="nav-right">
+                <div class="nav-icon">
+                    <i class="fas fa-file"></i>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-badge">3</div>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-envelope"></i>
+                    <div class="notification-badge">7</div>
+                </div>
+                <div class="user-avatar">JS</div>
+                <div class="nav-icon">
+                    <i class="fas fa-times"></i>
                 </div>
             </div>
-            <div class="legend">
-                <div class="legend-item">
-                    <div style="width:12px;height:12px;background:#42a5f5;display:inline-block;border-radius:2px;margin-right:8px;"></div>
-                    股票基金 45%
-                </div>
-                <div class="legend-item">
-                    <div style="width:12px;height:12px;background:#5c6bc0;display:inline-block;border-radius:2px;margin-right:8px;"></div>
-                    债券 25%
-                </div>
-                <div class="legend-item">
-                    <div style="width:12px;height:12px;background:#66bb6a;display:inline-block;border-radius:2px;margin-right:8px;"></div>
-                    大宗商品 20%
-                </div>
-                <div class="legend-item">
-                    <div style="width:12px;height:12px;background:#ffb74d;display:inline-block;border-radius:2px;margin-right:8px;"></div>
-                    现金类 10%
-                </div>
-            </div>
-        </section>
+        </div>
         
-        <!-- 热门资产 -->
-        <section class="section-card top-assets">
-            <div class="card-header">
-                <h3 class="card-title">热门资产</h3>
-                <div class="card-actions">
-                    <div class="action-btn"><i class="fas fa-filter"></i></div>
-                    <div class="action-btn"><i class="fas fa-sort"></i></div>
-                </div>
+        <!-- 仪表板内容 -->
+        <div class="page-content">
+            <div class="content-header">
+                <h1>财务概览</h1>
+                <p>查看您业务的各项关键指标和表现数据</p>
             </div>
-            <table class="asset-table">
-                <thead>
-                    <tr>
-                        <th>资产名称</th>
-                        <th>价格</th>
-                        <th>持仓占比</th>
-                        <th>24H变化</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><div class="asset-name"><span class="symbol">AAPL</span>苹果公司</div></td>
-                        <td>$174.19</td>
-                        <td>18.2%</td>
-                        <td class="change-positive">+2.4%</td>
-                    </tr>
-                    <tr>
-                        <td><div class="asset-name"><span class="symbol">MSFT</span>微软公司</div></td>
-                        <td>$330.65</td>
-                        <td>15.7%</td>
-                        <td class="change-positive">+1.1%</td>
-                    </tr>
-                    <tr>
-                        <td><div class="asset-name"><span class="symbol">TSLA</span>特斯拉</div></td>
-                        <td>$265.28</td>
-                        <td>12.5%</td>
-                        <td class="change-negative">-0.8%</td>
-                    </tr>
-                    <tr>
-                        <td><div class="asset-name"><span class="symbol">GOLD</span>黄金ETF</div></td>
-                        <td>$184.35</td>
-                        <td>8.7%</td>
-                        <td class="change-positive">+0.7%</td>
-                    </tr>
-                    <tr>
-                        <td><div class="asset-name"><span class="symbol">BTC</span>比特币</div></td>
-                        <td>$61,230</td>
-                        <td>7.5%</td>
-                        <td class="change-positive">+3.2%</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-        
-        <!-- 投资表现 -->
-        <section class="section-card portfolio-performance">
-            <div class="card-header">
-                <h3 class="card-title">投资表现</h3>
-                <div class="card-actions">
-                    <div class="action-btn"><i class="fas fa-calendar"></i></div>
-                    <div class="action-btn"><i class="fas fa-exchange-alt"></i></div>
-                </div>
-            </div>
-            <div class="chart-placeholder">
-                <div style="text-align:center;">
-                    <i class="fas fa-chart-line" style="font-size:50px; margin-bottom:15px;"></i><br>
-                    投资组合表现趋势图
-                </div>
-            </div>
-            <div style="display:flex; justify-content:space-around; margin-top:25px;">
-                <div style="text-align:center;">
-                    <div class="chart-label">1个月</div>
-                    <div class="change-positive">+5.2%</div>
-                </div>
-                <div style="text-align:center;">
-                    <div class="chart-label">3个月</div>
-                    <div class="change-positive">+8.7%</div>
-                </div>
-                <div style="text-align:center;">
-                    <div class="chart-label">6个月</div>
-                    <div class="change-positive">+14.3%</div>
-                </div>
-                <div style="text-align:center;">
-                    <div class="chart-label">1年</div>
-                    <div class="change-positive">+24.6%</div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- 风险评估 -->
-        <section class="section-card risk-assessment">
-            <div class="card-header">
-                <h3 class="card-title">风险评估</h3>
-                <div class="card-actions">
-                    <div class="action-btn"><i class="fas fa-info-circle"></i></div>
-                </div>
-            </div>
-            <div class="risk-container">
-                <div class="risk-meter">
-                    <div class="meter">
-                        <div class="risk-indicator"></div>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="card-header">
+                        <div class="card-title">总营收</div>
+                        <i class="fas fa-dollar-sign" style="color: #4a6fff;"></i>
                     </div>
-                    <div class="risk-label">中等</div>
-                    <div class="risk-description">当前风险级别</div>
+                    <div class="metric-value">$42,567.89</div>
+                    <div class="metric-change">
+                        <i class="fas fa-arrow-up"></i>
+                        +12.5%
+                    </div>
                 </div>
-                <div class="risk-summary">
-                    <div class="risk-item">
-                        <div class="risk-name">波动性指数</div>
-                        <div class="risk-value">28.4</div>
+                
+                <div class="metric-card">
+                    <div class="card-header">
+                        <div class="card-title">新客户</div>
+                        <i class="fas fa-users" style="color: #0abb87;"></i>
                     </div>
-                    <div class="risk-item">
-                        <div class="risk-name">夏普比率</div>
-                        <div class="risk-value positive">1.56</div>
+                    <div class="metric-value">1,238</div>
+                    <div class="metric-change">
+                        <i class="fas fa-arrow-up"></i>
+                        +8.2%
                     </div>
-                    <div class="risk-item">
-                        <div class="risk-name">最大回撤</div>
-                        <div class="risk-value">-12.3%</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="card-header">
+                        <div class="card-title">活跃用户</div>
+                        <i class="fas fa-chart-line" style="color: #fd397a;"></i>
                     </div>
-                    <div class="risk-item">
-                        <div class="risk-name">风险收益比</div>
-                        <div class="risk-value warning">1:1.8</div>
+                    <div class="metric-value">34.5K</div>
+                    <div class="metric-change">
+                        <i class="fas fa-arrow-down"></i>
+                        -2.1%
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="card-header">
+                        <div class="card-title">转化率</div>
+                        <i class="fas fa-percent" style="color: #ffb822;"></i>
+                    </div>
+                    <div class="metric-value">8.4%</div>
+                    <div class="metric-change">
+                        <i class="fas fa-arrow-up"></i>
+                        +1.7%
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <div class="chart-title">季度收入统计</div>
+                    <div class="chart-actions">
+                        <button class="chart-btn">月度</button>
+                        <button class="chart-btn active">季度</button>
+                        <button class="chart-btn">年度</button>
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    季度收入图表展示区域（此处需要图表库实现）
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <div class="chart-title">用户地区分布</div>
+                    <div class="chart-actions">
+                        <button class="chart-btn">地区</button>
+                        <button class="chart-btn active">国家</button>
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    用户分布图表展示区域（此处需要图表库实现）
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 菜单项交互
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 图表按钮交互
+        const chartButtons = document.querySelectorAll('.chart-btn');
+        chartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除同组其他按钮的active类
+                const buttonGroup = this.parentElement;
+                const buttonsInGroup = buttonGroup.querySelectorAll('.chart-btn');
+                buttonsInGroup.forEach(btn => btn.classList.remove('active'));
+                
+                // 添加active类到当前按钮
+                this.classList.add('active');
+            });
+        });
+
+        // 模拟数据动态更新
+        setInterval(() => {
+            const metricCards = document.querySelectorAll('.metric-card');
+            metricCards.forEach(card => {
+                const changeEl = card.querySelector('.metric-change');
+                const value = parseFloat(changeEl.textContent.replace(/[^0-9.-]+/g, ""));
+                
+                // 小幅度随机改变百分比
+                const randomChange = (Math.random() - 0.5) * 0.5;
+                const newValue = value + randomChange;
+                
+                changeEl.innerHTML = newValue > 0 ? 
+                    `<i class="fas fa-arrow-up"></i> +${newValue.toFixed(1)}%` : 
+                    `<i class="fas fa-arrow-down"></i> ${newValue.toFixed(1)}%`;
+                
+                changeEl.style.color = newValue > 0 ? '#0abb87' : '#fd397a';
+            });
+        }, 5000);
+    </script>
 </body>
 </html>
