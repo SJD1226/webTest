@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自选股票行情</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            padding: 16px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 指数头部区域 */
+        .indices-header {
+            display: flex;
+            padding: 16px 20px;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .index-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .index-name {
+            font-size: 14px;
+            color: #666;
+            margin-right: 8px;
+        }
+        
+        .index-value {
+            font-size: 18px;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        
+        .index-change {
+            font-size: 14px;
+        }
+        
+        .down {
+            color: #00b050;
+        }
+        
+        .up {
+            color: #f43c59;
+        }
+        
+        /* 功能导航区 */
+        .function-nav {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            background: #fafafa;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-right: auto;
+        }
+        
+        .tab {
+            padding: 8px 16px;
+            font-size: 16px;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            color: #1677ff;
+            border-bottom: 2px solid #1677ff;
+            font-weight: 500;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 6px 14px;
+            font-size: 14px;
+            background: #1677ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn.add {
+            background: #1677ff;
+        }
+        
+        .btn.home {
+            background: #00b050;
+        }
+        
+        .filter {
+            display: flex;
+            margin-left: 20px;
+        }
+        
+        .filter-btn {
+            padding: 6px 12px;
+            font-size: 14px;
+            background: #f5f5f5;
+            color: #666;
+            border: 1px solid #e1e1e1;
+            cursor: pointer;
+        }
+        
+        .filter-btn.active {
+            background: #e6f4ff;
+            color: #1677ff;
+            border-color: #91caff;
+        }
+        
+        /* 表格样式 */
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .stock-table th {
+            padding: 12px 16px;
+            background: #fafafa;
+            color: #666;
+            font-weight: 500;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        .stock-table tr {
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stock-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .stock-table td {
+            padding: 16px;
+            font-size: 14px;
+        }
+        
+        .stock-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stock-name {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .stock-code {
+            font-size: 13px;
+            color: #999;
+        }
+        
+        .stock-price {
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .stock-change {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .change-value {
+            font-size: 15px;
+            margin-bottom: 2px;
+        }
+        
+        .change-percent {
+            font-size: 13px;
+        }
+        
+        .volume, .market-cap, .ytd-change {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部指数信息 -->
+        <div class="indices-header">
+            <div class="index-item">
+                <div class="index-name">上证指数</div>
+                <div class="index-value">3594.94</div>
+                <div class="index-change down">-0.30%</div>
+            </div>
+            <div class="index-item">
+                <div class="index-name">深证成指</div>
+                <div class="index-value">11165.25</div>
+                <div class="index-change down">-0.25%</div>
+            </div>
+            <div class="index-item">
+                <div class="index-name">创业板指</div>
+                <div class="index-value">2338.33</div>
+                <div class="index-change down">-0.30%</div>
+            </div>
+        </div>
+        
+        <!-- 功能导航区域 -->
+        <div class="function-nav">
+            <div class="tabs">
+                <div class="tab active">自选股票</div>
+                <div class="tab">自选基金</div>
+                <div class="tab">自选组合</div>
+            </div>
+            
+            <div class="buttons">
+                <button class="btn add">添加自选股票</button>
+                <button class="btn home">添加到首页</button>
+            </div>
+            
+            <div class="filter">
+                <button class="filter-btn active">全部</button>
+            </div>
+        </div>
+        
+        <!-- 股票表格 -->
+        <table class="stock-table">
+            <thead>
+                <tr>
+                    <th width="25%">股票</th>
+                    <th width="15%">当前价</th>
+                    <th width="15%">涨跌幅</th>
+                    <th width="15%">成交量</th>
+                    <th width="15%">总市值</th>
+                    <th width="15%">年初至今</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="stock-info">
+                            <div class="stock-name">腾讯控股</div>
+                            <div class="stock-code">HK00700</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="stock-price">549.0</div>
+                    </td>
+                    <td>
+                        <div class="stock-change down">
+                            <div class="change-value">-8.0</div>
+                            <div class="change-percent">(-1.44%)</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="volume">752.25万股</div>
+                    </td>
+                    <td>
+                        <div class="market-cap">5.03万亿</div>
+                    </td>
+                    <td>
+                        <div class="ytd-change up">+32.80%</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="stock-info">
+                            <div class="stock-name">长江电力</div>
+                            <div class="stock-code">SH600900</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="stock-price">28.92</div>
+                    </td>
+                    <td>
+                        <div class="stock-change down">
+                            <div class="change-value">-0.02</div>
+                            <div class="change-percent">(-0.07%)</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="volume">42.44万手</div>
+                    </td>
+                    <td>
+                        <div class="market-cap">7076.21亿</div>
+                    </td>
+                    <td>
+                        <div class="ytd-change up">+1.05%</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="stock-info">
+                            <div class="stock-name">洋河股份</div>
+                            <div class="stock-code">SZ002304</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="stock-price">68.47</div>
+                    </td>
+                    <td>
+                        <div class="stock-change down">
+                            <div class="change-value">-0.42</div>
+                            <div class="change-percent">(-0.61%)</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="volume">24896手</div>
+                    </td>
+                    <td>
+                        <div class="market-cap">1031.46亿</div>
+                    </td>
+                    <td>
+                        <div class="ytd-change down">-12.57%</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="stock-info">
+                            <div class="stock-name">赣锋锂业</div>
+                            <div class="stock-code">SZ002460</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="stock-price">39.61</div>
+                    </td>
+                    <td>
+                        <div class="stock-change up">
+                            <div class="change-value">+0.21</div>
+                            <div class="change-percent">(+0.53%)</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="volume">53.31万手</div>
+                    </td>
+                    <td>
+                        <div class="market-cap">799.00亿</div>
+                    </td>
+                    <td>
+                        <div class="ytd-change up">+13.64%</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="stock-info">
+                            <div class="stock-name">比亚迪</div>
+                            <div class="stock-code">SZ002594</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="stock-price">337.14</div>
+                    </td>
+                    <td>
+                        <div class="stock-change down">
+                            <div class="change-value">-5.58</div>
+                            <div class="change-percent">(-1.63%)</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="volume">90485手</div>
+                    </td>
+                    <td>
+                        <div class="market-cap">1.85万亿</div>
+                    </td>
+                    <td>
+                        <div class="ytd-change up">+19.27%</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="stock-info">
+                            <div class="stock-name">迈瑞医疗</div>
+                            <div class="stock-code">SZ300760</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="stock-price">231.90</div>
+                    </td>
+                    <td>
+                        <div class="stock-change down">
+                            <div class="change-value">-0.17</div>
+                            <div class="change-percent">(-0.07%)</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="volume">43308手</div>
+                    </td>
+                    <td>
+                        <div class="market-cap">2811.65亿</div>
+                    </td>
+                    <td>
+                        <div class="ytd-change down">-8.27%</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // 简单交互逻辑
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
