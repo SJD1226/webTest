@@ -1,0 +1,47 @@
+/* ===== 全局变量与基础样式 ===== */
+:root {
+    --primary-dark: #1a2236;
+    --secondary-dark: #222c44;
+    --accent-blue: #4a6fff;
+    --accent-green: #0abb87;
+    --light-bg: #f6f8fc;
+    --border-light: #ebedf3;
+    --text-dark: #1a1f36;
+    --text-light: #8a96a8;
+    --white: #ffffff;
+    --shadow: 0 4px 6px rgba(0,0,0,0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--light-bg);
+    display: flex;
+    min-height: 100vh;
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* ===== 响应式设计 ===== */
+@media (max-width: 768px) {
+    .search-box input {
+        display: none;
+    }
+    .search-box {
+        padding: 10px;
+        min-width: auto;
+    }
+}

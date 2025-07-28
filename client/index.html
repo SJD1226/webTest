@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金融SaaS仪表盘</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/sidebar.css">
+    <link rel="stylesheet" href="assets/css/top-nav.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body>
+    <!-- 侧边导航栏 -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <div class="logo-icon">7</div>
+            <div class="logo-text">
+                Portfolio Management
+            </div>
+        </div>
+        
+        <div class="menu-title">主菜单</div>
+        
+        <div class="menu-item active">
+            <i class="fas fa-chart-pie"></i>
+            <span>仪表盘</span>
+        </div>
+        
+        <div class="menu-item">
+            <i class="fas fa-copy"></i>
+            <span>资产配置</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-th-large"></i>
+            <span>观察列表</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-puzzle-piece"></i>
+            <span>市场报价</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-cube"></i>
+            <span>观察单</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-clipboard-list"></i>
+            <span>股票</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-chart-line"></i>
+            <span>图表</span>
+        </div>
+    </div>
+    
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <!-- 顶部导航栏 -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <div class="brand-logo">投资组合分析</div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="搜索...">
+                </div>
+            </div>
+            
+            <div class="nav-right">
+                <div class="nav-icon">
+                    <i class="fas fa-file"></i>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-badge">3</div>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-envelope"></i>
+                    <div class="notification-badge">7</div>
+                </div>
+                <div class="user-avatar">JS</div>
+                <div class="nav-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 金融数据面板 -->
+        <div class="dashboard-container">
+            <div class="financial-dashboard">
+                <div class="financial-header">
+                    <h1>金融数据面板</h1>
+                </div>
+                
+                <!-- 资产概览 -->
+                <div class="asset-summary">
+                    <div class="asset-item">
+                        <div class="item-title">
+                            <i class="fas fa-wallet"></i> 总资产
+                        </div>
+                        <div class="item-value">100,000</div>
+                        <div class="item-desc">人民币</div>
+                    </div>
+                    
+                    <div class="asset-item">
+                        <div class="item-title">
+                            <i class="fas fa-chart-line"></i> 实施收益率
+                        </div>
+                        <div class="item-value">2.3%</div>
+                        <div class="return-up">
+                            <i class="fas fa-arrow-up"></i> 优于大盘
+                        </div>
+                    </div>
+                    
+                    <div class="asset-item">
+                        <div class="item-title">
+                            <i class="fas fa-coins"></i> 昨日收益
+                        </div>
+                        <div class="item-value">+2100</div>
+                        <div class="item-desc">较前日+3.2%</div>
+                    </div>
+                </div>
+                
+                <!-- 图表区域 -->
+                <div class="charts-container">
+                    <!-- 资产分布图 -->
+                    <div class="chart-container">
+                        <div class="chart-title">资产分布</div>
+                        <div class="chart-wrapper">
+                            <canvas id="assetChart" width="200" height="150"></canvas>
+                        </div>
+                        
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #2a5dff;"></div>
+                                <span>股票 38%</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #0dbd70;"></div>
+                                <span>债券 25%</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #ff6b6b;"></div>
+                                <span>基金 18%</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #ffd166;"></div>
+                                <span>另类 12%</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #a29bfe;"></div>
+                                <span>现金 7%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 收益率走势图 -->
+                    <div class="return-container">
+                        <div class="chart-title">收益率走势对比</div>
+                        
+                        <div class="time-filter">
+                            <div class="time-tab">近1月</div>
+                            <div class="time-tab active">近3月</div>
+                            <div class="time-tab">近1年</div>
+                        </div>
+                        
+                        <div class="chart-wrapper-large">
+                            <canvas id="returnChart" width="400" height="180"></canvas>
+                        </div>
+                        
+                        <div class="chart-legend">
+                            <div class="chart-legend-item">
+                                <div class="chart-legend-line" style="background-color: #2a5dff;"></div>
+                                <span>投资组合</span>
+                            </div>
+                            <div class="chart-legend-item">
+                                <div class="chart-legend-line" style="background-color: #ff6b6b;"></div>
+                                <span>沪深300</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入JavaScript -->
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

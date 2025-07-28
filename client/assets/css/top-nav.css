@@ -1,0 +1,100 @@
+/* ===== 顶部导航 ===== */
+.top-nav {
+    background: var(--primary-dark);
+    color: var(--white);
+    padding: 0 25px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 99;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.brand-logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+}
+
+.search-box {
+    background: var(--secondary-dark);
+    border-radius: 8px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-box i {
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.search-box input {
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    font-size: 14px;
+    min-width: 250px;
+    outline: none;
+}
+
+.search-box input::placeholder {
+    color: var(--text-light);
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-icon {
+    position: relative;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--text-light);
+    transition: var(--transition);
+}
+
+.nav-icon:hover {
+    color: var(--white);
+}
+
+.notification-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background-color: var(--accent-green);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--secondary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer;
+}
