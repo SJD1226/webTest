@@ -1,31 +1,35 @@
-// 页面加载后执行
-document.addEventListener('DOMContentLoaded', function() {
-    // 菜单项交互
+// 全局变量声明
+let assetChart, returnChart;
+
+// 初始化菜单交互
+function initMenuInteraction() {
     const menuItems = document.querySelectorAll('.menu-item');
     menuItems.forEach(item => {
         item.addEventListener('click', function() {
-            // 移除所有活动类
             menuItems.forEach(i => i.classList.remove('active'));
-            // 添加活动类到当前元素
             this.classList.add('active');
         });
     });
+}
 
-    // 用户头像交互
+// 初始化用户头像交互
+function initUserAvatarInteraction() {
     const userAvatar = document.querySelector('.user-avatar');
-    if(userAvatar) {
+    if (userAvatar) {
         userAvatar.addEventListener('click', function() {
             const userName = prompt('请输入您的姓名:', '');
-            if(userName && userName.trim()) {
+            if (userName && userName.trim()) {
                 const initials = userName.trim().substring(0, 2).toUpperCase();
                 this.textContent = initials;
             }
         });
     }
+}
 
-    // 初始化饼图（资产分布）
+// 初始化资产分布饼图
+function initAssetChart() {
     const assetCtx = document.getElementById('assetChart').getContext('2d');
-    const assetChart = new Chart(assetCtx, {
+    assetChart = new Chart(assetCtx, {
         type: 'pie',
         data: {
             labels: ['股票配置', '债券投资', '货币基金', '另类投资', '现金储备'],
@@ -59,10 +63,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+}
 
-    // 初始化折线图（收益率走势对比）
+// 初始化收益率走势图
+function initReturnChart() {
     const returnCtx = document.getElementById('returnChart').getContext('2d');
-    const returnChart = new Chart(returnCtx, {
+    returnChart = new Chart(returnCtx, {
         type: 'line',
         data: {
             labels: ['4月', '5月', '6月', '7月'],
@@ -114,8 +120,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+}
 
-    // 时间筛选交互
+// 初始化时间筛选交互
+function initTimeFilterInteraction() {
     const timeTabs = document.querySelectorAll('.time-tab');
     timeTabs.forEach(tab => {
         tab.addEventListener('click', function() {
@@ -140,4 +148,206 @@ document.addEventListener('DOMContentLoaded', function() {
             returnChart.update();
         });
     });
+}
+
+// 初始化刷新按钮交互
+function initRefreshButtons() {
+    const refreshButtons = document.querySelectorAll('.data-refresh');
+    refreshButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const original = this.innerHTML;
+            this.innerHTML = `<i class="fas fa-sync-alt fa-spin"></i> 更新中...`;
+            setTimeout(() => {
+                this.innerHTML = original;
+                fetchAssetData();
+            }, 1000);
+        });
+    });
+}
+
+// 从API获取资产数据
+async function fetchAssetData() {
+    try {
+        const response = await fetch('http://localhost:3001/api/portfolio/my-holdings');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP错误! 状态码: ${response.status}`);
+        }
+        
+        const apiResponse = await response.json();
+        console.log("API返回数据:", apiResponse);
+        
+        // 检查API响应结构
+        if (!apiResponse.data) {
+            throw new Error("API返回数据中缺少data字段");
+        }
+        
+        // 更新总资产显示
+        updateTotalMarketValue(apiResponse.data);
+        
+        // 更新收益率显示
+        updateTotalReturnPercent(apiResponse.data);
+
+        //更新收益显示
+        updateTotalProfit(apiResponse.data);
+        
+        console.log('资产数据更新成功');
+        return true;
+    } catch (error) {
+        console.error('获取资产数据失败:', error);
+        
+        // 显示错误提示
+        const errorElement = document.getElementById('api-error');
+        if (errorElement) {
+            errorElement.textContent = `数据更新失败: ${error.message}`;
+            errorElement.style.display = 'block';
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 3000);
+        }
+        
+        return false;
+    }
+}
+
+// 更新总资产显示
+function updateTotalMarketValue(data) {
+    try {
+        const totalMarketValue = document.getElementById('total-market-value');
+        
+        if (!totalMarketValue) {
+            throw new Error("未找到ID为'total-market-value'的元素");
+        }
+        
+        // 检查totalMarketValue字段是否存在
+        if (typeof data.totalMarketValue === 'undefined') {
+            throw new Error("API返回数据中缺少totalMarketValue字段");
+        }
+        
+        // 转换为数字
+        const totalValue = Number(data.totalMarketValue);
+        
+        if (isNaN(totalValue)) {
+            throw new Error(`totalMarketValue不是有效数字: ${data.totalMarketValue}`);
+        }
+        
+        // 格式化并显示
+        totalMarketValue.textContent = `¥${totalValue.toLocaleString('zh-CN', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        })}`;
+        
+        // 重置样式
+        totalMarketValue.style.color = "";
+        
+    } catch (error) {
+        console.error("更新总资产时出错:", error);
+        const totalMarketValue = document.getElementById('total-market-value');
+        if (totalMarketValue) {
+            totalMarketValue.textContent = "¥数据异常";
+            totalMarketValue.style.color = "red";
+        }
+    }
+}
+
+// 更新收益率显示
+function updateTotalReturnPercent(data) {
+    try {
+        const totalReturnPercent = document.getElementById('total-return-percent');
+        const returnChange = document.getElementById('return-change');
+    
+        if (!totalReturnPercent) {
+            throw new Error("未找到收益率显示元素");
+        }
+        
+        // 检查totalReturnPercent字段是否存在
+        if (typeof data.totalReturnPercent === 'undefined') {
+            throw new Error("API返回数据中缺少totalReturnPercent字段");
+        }
+        
+        // 转换为数字
+        const returnValue = Number(data.totalReturnPercent);
+        
+        if (isNaN(returnValue)) {
+            throw new Error(`totalReturnPercent不是有效数字: ${data.totalReturnPercent}`);
+        }
+        
+        // 格式化并显示
+        totalReturnPercent.textContent = `${returnValue.toFixed(2)}%`;
+        
+        // 根据正负设置样式
+        if (returnValue >= 0) {
+            totalReturnPercent.style.color = "#f1403d";
+            returnChange.textContent = "优于大盘";
+            returnChange.style.color = "#f1403d";
+            returnChange.className = "growth-indicator growth-up";
+        } else {
+            totalReturnPercent.style.color = "#0dbd70";
+            returnChange.textContent = "低于大盘";
+            returnChange.style.color = "#0dbd70";
+            returnChange.className = "growth-indicator growth-down";
+        }
+        
+    } catch (error) {
+        console.error("更新收益率时出错:", error);
+        const totalReturnPercent = document.getElementById('total-return-percent');
+        if (totalReturnPercent) {
+            totalReturnPercent.textContent = "数据异常";
+            totalReturnPercent.style.color = "red";
+        }
+    }
+}
+// 更新收益
+function updateTotalProfit(data) {
+    try {
+        const totalProfit = document.getElementById('total-profit');
+    
+        if (!totalProfit) {
+            throw new Error("未找到收益率显示元素");
+        }
+        
+        // 检查totalReturnPercent字段是否存在
+        if (typeof data.totalProfit === 'undefined') {
+            throw new Error("API返回数据中缺少totalProfit字段");
+        }
+        
+        // 转换为数字
+        const returnValue = Number(data.totalProfit);
+        
+        if (isNaN(returnValue)) {
+            throw new Error(`totalProfit不是有效数字: ${data.totalProfit}`);
+        }
+        
+        // 格式化并显示
+        totalProfit.textContent = `${returnValue.toFixed(2)}%`;
+   
+        
+    } catch (error) {
+        console.error("更新收益时出错:", error);
+        const totalReturnPercent = document.getElementById('total-profit');
+        if (totalReturnPercent) {
+            totalReturnPercent.textContent = "数据异常";
+            totalReturnPercent.style.color = "red";
+        }
+    }
+}
+
+
+// 页面初始化
+document.addEventListener('DOMContentLoaded', function() {
+    // 初始化交互功能
+    initMenuInteraction();
+    initUserAvatarInteraction();
+    initTimeFilterInteraction();
+    initRefreshButtons();
+    
+    // 初始化图表
+    initAssetChart();
+    initReturnChart();
+    
+    // 首次获取数据
+    fetchAssetData();
+    
+    // 每30秒更新一次数据
+    setInterval(fetchAssetData, 30000);
 });
