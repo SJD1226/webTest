@@ -1,9 +1,198 @@
-/* ===== 主内容区 ===== */
-.main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
+/* ===== 主内容区 =====
+  /* 主内容区样式 */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+/* 金融数据面板样式 */
+        .dashboard-container {
+            flex: 1;
+            padding: 30px;
+            background: #f8fafc;
+            overflow-y: auto;
+        }
+        
+        .financial-dashboard {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        /* 资产概览样式 */
+        .asset-summary {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .asset-item {
+            flex: 1;
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .item-title {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 15px;
+        }
+        
+        .item-title i {
+            margin-right: 10px;
+            font-size: 20px;
+            color: #2a5dff;
+        }
+        
+        .item-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .item-desc {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .return-up {
+            display: flex;
+            align-items: center;
+            color: #0dbd70;
+            font-weight: 600;
+        }
+        
+        .return-up i {
+            margin-right: 5px;
+        }
+        
+        /* 图表区域样式 */
+        .charts-container {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .chart-container {
+            flex: 1;
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .return-container {
+            flex: 2;
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1a1d28;
+        }
+        
+        .chart-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chart-wrapper-large {
+            flex: 1;
+            position: relative;
+        }
+        
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .time-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .time-tab {
+            padding: 8px 16px;
+            background: #f0f3fa;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .time-tab.active {
+            background: #2a5dff;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .chart-legend {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .chart-legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .chart-legend-line {
+            width: 30px;
+            height: 3px;
+            border-radius: 2px;
+            margin-right: 8px;
+        }
+
+
+
+
+
+
+
+
+/* 
 
 /* ===== 仪表盘布局 ===== */
 .dashboard-container {
@@ -198,4 +387,4 @@
     .nav-right {
         gap: 10px;
     }
-}
+} */

@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>股票行情分析系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            padding: 16px;
+        }
+        
+        .dashboard-layout {
+            display: flex;
+            gap: 25px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        /* 左列：自选股票行情 */
+        .left-column {
+            flex: 2;
+            min-width: 800px;
+        }
+        
+        .stock-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+        
+        /* 右列：市场行情分析 */
+        .right-column {
+            flex: 1;
+            min-width: 350px;
+        }
+        
+        .dashboard-section {
+            background-color: white;
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .panel {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .panel:last-child {
+            margin-bottom: 0;
+        }
+        
+        .panel-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1d28;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #f0f3fa;
+            padding-bottom: 15px;
+        }
+        
+        .assets-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .assets-table th {
+            text-align: left;
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 600;
+            padding: 12px 10px;
+            border-bottom: 1px solid #f0f3fa;
+        }
+        
+        .assets-table td {
+            padding: 16px 10px;
+            border-bottom: 1px solid #f0f3fa;
+            font-weight: 500;
+        }
+        
+        .asset-name {
+            font-weight: 600;
+        }
+        
+        .positive-change {
+            color: #0dbd70;
+            font-weight: 700;
+        }
+        
+        .negative-change {
+            color: #f1403d;
+            font-weight: 700;
+        }
+        
+        .rank {
+            background: #f0f3fa;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .cash-balance {
+            background: #f0f8ff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            font-weight: 600;
+            color: #2a5dff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 250px;
+        }
+        
+        .radar-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7280;
+            padding: 0 20px;
+        }
+        
+        .time-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .time-tab {
+            padding: 8px 16px;
+            background: #f8f9fc;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .time-tab.active {
+            background: #2a5dff;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .continuous-earnings {
+            background: #f0f8ff;
+            border-radius: 16px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .continuous-earnings-text {
+            font-weight: 600;
+            color: #2a5dff;
+        }
+        
+        .show-earnings {
+            background: #2a5dff;
+            color: white;
+            border-radius: 16px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1d28;
+        }
+        
+        .calendar-arrows {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .arrow-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f0f3fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        
+        .day-header {
+            text-align: center;
+            padding: 12px 0;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .day-cell {
+            background: #f8f9fc;
+            border-radius: 12px;
+            aspect-ratio: 1/1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .day-number {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .day-earning {
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .positive-earning {
+            color: #0dbd70;
+        }
+        
+        .negative-earning {
+            color: #f1403d;
+        }
+        
+        .today-cell {
+            border: 2px solid #2a5dff;
+            background: #f0f8ff;
+        }
+        
+        .today-text {
+            font-size: 14px;
+            color: #2a5dff;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        
+        .cash-icon {
+            font-size: 20px;
+        }
+        
+        .update-notice {
+            font-size: 12px;
+            color: #6b7280;
+            text-align: right;
+            margin-top: 10px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: center;
+            position: relative;
+            padding: 0 0 25px;
+        }
+        
+        .header .tabs {
+            display: flex;
+            background: #f0f3fa;
+            border-radius: 24px;
+            padding: 4px;
+        }
+        
+        .tab-item {
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-item.active {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            color: #2a5dff;
+        }
+        
+        .category-tabs {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 0 0 15px;
+            margin-bottom: 20px;
+            scrollbar-width: none;
+        }
+        
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .category-tab {
+            padding: 8px 16px;
+            background: #f0f3fa;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .category-tab.active {
+            background: #2a5dff;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .time-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+        
+        .trade-time {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .indices-container {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .index-card {
+            background: white;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            min-width: 180px;
+            flex: 1;
+        }
+        
+        .index-name {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .index-value {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .index-change {
+            display: flex;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .index-change.negative {
+            color: #f1403d;
+        }
+        
+        .index-change.positive {
+            color: #0dbd70;
+        }
+        
+        .market-overview {
+            background: white;
+            border-radius: 16px;
+            padding: 22px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+        
+        .market-overview-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: #f8f9fc;
+            border-radius: 14px;
+            padding: 15px;
+        }
+        
+        .stat-title {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .up-down-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .stat-item .label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .stat-item .value {
+            font-weight: 700;
+        }
+        
+        .positive-value {
+            color: #0dbd70;
+        }
+        
+        .negative-value {
+            color: #f1403d;
+        }
+        
+        .volume-info {
+            background: #f0f8ff;
+            border-radius: 14px;
+            padding: 15px;
+        }
+        
+        .volume-value {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: #2a5dff;
+        }
+        
+        .volume-change {
+            font-size: 14px;
+            color: #0dbd70;
+            font-weight: 600;
+        }
+        
+        .bar-graph {
+            height: 6px;
+            background: #f0f3fa;
+            border-radius: 3px;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bar-graph-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 38%;
+            background: linear-gradient(90deg, #0dbd70, #2a5dff);
+            border-radius: 3px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #1a1d28;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f3fa;
+        }
+        
+        /* 指数头部区域 */
+        .indices-header {
+            display: flex;
+            padding: 16px 20px;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .index-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .index-name {
+            font-size: 14px;
+            color: #666;
+            margin-right: 8px;
+        }
+        
+        .index-value {
+            font-size: 18px;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        
+        .index-change {
+            font-size: 14px;
+        }
+        
+        .down {
+            color: #00b050;
+        }
+        
+        .up {
+            color: #f43c59;
+        }
+        
+        /* 功能导航区 */
+        .function-nav {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            background: #fafafa;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-right: auto;
+        }
+        
+        .tab {
+            padding: 8px 16px;
+            font-size: 16px;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            color: #1677ff;
+            border-bottom: 2px solid #1677ff;
+            font-weight: 500;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 6px 14px;
+            font-size: 14px;
+            background: #1677ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn.add {
+            background: #1677ff;
+        }
+        
+        .btn.home {
+            background: #00b050;
+        }
+        
+        .filter {
+            display: flex;
+            margin-left: 20px;
+        }
+        
+        .filter-btn {
+            padding: 6px 12px;
+            font-size: 14px;
+            background: #f5f5f5;
+            color: #666;
+            border: 1px solid #e1e1e1;
+            cursor: pointer;
+        }
+        
+        .filter-btn.active {
+            background: #e6f4ff;
+            color: #1677ff;
+            border-color: #91caff;
+        }
+        
+        /* 表格样式 */
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .stock-table th {
+            padding: 12px 16px;
+            background: #fafafa;
+            color: #666;
+            font-weight: 500;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        .stock-table tr {
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stock-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .stock-table td {
+            padding: 16px;
+            font-size: 14px;
+        }
+        
+        .stock-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stock-name {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .stock-code {
+            font-size: 13px;
+            color: #999;
+        }
+        
+        .stock-price {
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .stock-change {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .change-value {
+            font-size: 15px;
+            margin-bottom: 2px;
+        }
+        
+        .change-percent {
+            font-size: 13px;
+        }
+        
+        .volume, .market-cap, .ytd-change {
+            color: #666;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 1200px) {
+            .dashboard-layout {
+                flex-direction: column;
+            }
+            .left-column, .right-column {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- 左列：自选股票行情 -->
+        <div class="left-column">
+            <div class="stock-container">
+                <!-- 顶部指数信息 -->
+                <div class="indices-header">
+                    <div class="index-item">
+                        <div class="index-name">上证指数</div>
+                        <div class="index-value">3594.94</div>
+                        <div class="index-change down">-0.30%</div>
+                    </div>
+                    <div class="index-item">
+                        <div class="index-name">深证成指</div>
+                        <div class="index-value">11165.25</div>
+                        <div class="index-change down">-0.25%</div>
+                    </div>
+                    <div class="index-item">
+                        <div class="index-name">创业板指</div>
+                        <div class="index-value">2338.33</div>
+                        <div class="index-change down">-0.30%</div>
+                    </div>
+                </div>
+                
+                <!-- 功能导航区域 -->
+                <div class="function-nav">
+                    <div class="tabs">
+                        <div class="tab active">自选股票</div>
+                        <div class="tab">自选基金</div>
+                        <div class="tab">自选组合</div>
+                    </div>
+                    
+                    <div class="buttons">
+                        <button class="btn add">添加自选股票</button>
+                        <button class="btn home">添加到首页</button>
+                    </div>
+                    
+                    <div class="filter">
+                        <button class="filter-btn active">全部</button>
+                    </div>
+                </div>
+                
+                <!-- 股票表格 -->
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th width="25%">股票</th>
+                            <th width="15%">当前价</th>
+                            <th width="15%">涨跌幅</th>
+                            <th width="15%">成交量</th>
+                            <th width="15%">总市值</th>
+                            <th width="15%">年初至今</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="stock-info">
+                                    <div class="stock-name">腾讯控股</div>
+                                    <div class="stock-code">HK00700</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="stock-price">549.0</div>
+                            </td>
+                            <td>
+                                <div class="stock-change down">
+                                    <div class="change-value">-8.0</div>
+                                    <div class="change-percent">(-1.44%)</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="volume">752.25万股</div>
+                            </td>
+                            <td>
+                                <div class="market-cap">5.03万亿</div>
+                            </td>
+                            <td>
+                                <div class="ytd-change up">+32.80%</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="stock-info">
+                                    <div class="stock-name">长江电力</div>
+                                    <div class="stock-code">SH600900</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="stock-price">28.92</div>
+                            </td>
+                            <td>
+                                <div class="stock-change down">
+                                    <div class="change-value">-0.02</div>
+                                    <div class="change-percent">(-0.07%)</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="volume">42.44万手</div>
+                            </td>
+                            <td>
+                                <div class="market-cap">7076.21亿</div>
+                            </td>
+                            <td>
+                                <div class="ytd-change up">+1.05%</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="stock-info">
+                                    <div class="stock-name">洋河股份</div>
+                                    <div class="stock-code">SZ002304</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="stock-price">68.47</div>
+                            </td>
+                            <td>
+                                <div class="stock-change down">
+                                    <div class="change-value">-0.42</div>
+                                    <div class="change-percent">(-0.61%)</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="volume">24896手</div>
+                            </td>
+                            <td>
+                                <div class="market-cap">1031.46亿</div>
+                            </td>
+                            <td>
+                                <div class="ytd-change down">-12.57%</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="stock-info">
+                                    <div class="stock-name">赣锋锂业</div>
+                                    <div class="stock-code">SZ002460</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="stock-price">39.61</div>
+                            </td>
+                            <td>
+                                <div class="stock-change up">
+                                    <div class="change-value">+0.21</div>
+                                    <div class="change-percent">(+0.53%)</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="volume">53.31万手</div>
+                            </td>
+                            <td>
+                                <div class="market-cap">799.00亿</div>
+                            </td>
+                            <td>
+                                <div class="ytd-change up">+13.64%</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="stock-info">
+                                    <div class="stock-name">比亚迪</div>
+                                    <div class="stock-code">SZ002594</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="stock-price">337.14</div>
+                            </td>
+                            <td>
+                                <div class="stock-change down">
+                                    <div class="change-value">-5.58</div>
+                                    <div class="change-percent">(-1.63%)</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="volume">90485手</div>
+                            </td>
+                            <td>
+                                <div class="market-cap">1.85万亿</div>
+                            </td>
+                            <td>
+                                <div class="ytd-change up">+19.27%</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="stock-info">
+                                    <div class="stock-name">迈瑞医疗</div>
+                                    <div class="stock-code">SZ300760</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="stock-price">231.90</div>
+                            </td>
+                            <td>
+                                <div class="stock-change down">
+                                    <div class="change-value">-0.17</div>
+                                    <div class="change-percent">(-0.07%)</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="volume">43308手</div>
+                            </td>
+                            <td>
+                                <div class="market-cap">2811.65亿</div>
+                            </td>
+                            <td>
+                                <div class="ytd-change down">-8.27%</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 右列：市场行情分析 -->
+        <div class="right-column">
+            <div class="dashboard-section">
+                <h2 class="section-title">市场行情分析</h2>
+                
+                <div class="header">
+                    <div class="tabs">
+                        <div class="tab-item active">今日行情</div>
+                    </div>
+                </div>
+                
+                <div class="category-tabs">
+                    <div class="category-tab active">沪深</div>
+                    <div class="category-tab">港股</div>
+                    <div class="category-tab">美股</div>
+                    <div class="category-tab">黄金</div>
+                    <div class="category-tab">国内债</div>
+                </div>
+                
+                <div class="time-container">
+                    <div class="trade-time">交易中 2025-07-25 11:03</div>
+                </div>
+                
+                <div class="indices-container">
+                    <div class="index-card">
+                        <div class="index-name">上证指数</div>
+                        <div class="index-value">3593.25</div>
+                        <div class="index-change negative">
+                            <span>-12.48</span>
+                            <span>-0.35%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="index-card">
+                        <div class="index-name">深证成指</div>
+                        <div class="index-value">11155.52</div>
+                        <div class="index-change negative">
+                            <span>-37.54</span>
+                            <span>-0.34%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="index-card">
+                        <div class="index-name">创业板指</div>
+                        <div class="index-value">2336.72</div>
+                        <div class="index-change negative">
+                            <span>-8.64</span>
+                            <span>-0.37%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="market-overview">
+                    <div class="market-overview-title">
+                        <i class="fas fa-chart-pie"></i> 市场总览
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-title">涨跌分布</div>
+                            <div class="up-down-stats">
+                                <div class="stat-item">
+                                    <span class="label">家上涨</span>
+                                    <span class="value">38%</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="label">涨</span>
+                                    <span class="value positive-value">2072</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="label">3153 跌</span>
+                                    <span class="value negative-value"></span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="label">涨停</span>
+                                    <span class="value positive-value">34</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="label">跌停</span>
+                                    <span class="value negative-value">5</span>
+                                </div>
+                            </div>
+                            <div class="bar-graph">
+                                <div class="bar-graph-fill"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="volume-info">
+                            <div class="stat-title">成交量</div>
+                            <div class="volume-value">10055亿</div>
+                            <div class="stat-desc">两市共10055亿</div>
+                            <div class="volume-change">
+                                <i class="fas fa-arrow-up"></i> 增量129亿
+                            </div>
+                            <div class="stat-desc">较上日+1%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 自选股票行情交互逻辑
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // 市场行情分析交互逻辑
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.category-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // 添加按钮事件
+        document.querySelector('.btn.add').addEventListener('click', function() {
+            alert('添加自选股票功能');
+        });
+        
+        document.querySelector('.btn.home').addEventListener('click', function() {
+            alert('添加到首页');
+        });
+    </script>
+</body>
+</html>
