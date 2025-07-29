@@ -323,37 +323,44 @@ function updateTotalReturnPercent(data) {
         }
     }
 }
-// 更新收益
+
 function updateTotalProfit(data) {
     try {
         const totalProfit = document.getElementById('total-profit');
     
         if (!totalProfit) {
-            throw new Error("未找到收益率显示元素");
+            throw new Error("未找到总收益显示元素"); // 优化错误提示
         }
         
-        // 检查totalReturnPercent字段是否存在
         if (typeof data.totalProfit === 'undefined') {
             throw new Error("API返回数据中缺少totalProfit字段");
         }
         
-        // 转换为数字
-        const returnValue = Number(data.totalProfit);
+        const profitValue = Number(data.totalProfit); // 将变量名改为更清晰的 profitValue
         
-        if (isNaN(returnValue)) {
+        if (isNaN(profitValue)) {
             throw new Error(`totalProfit不是有效数字: ${data.totalProfit}`);
         }
         
-        // 格式化并显示
-        totalProfit.textContent = `${returnValue.toFixed(2)}%`;
-   
+        // 格式化并显示，不添加百分号
+        // 您可能希望根据金额大小进行格式化，例如添加千位分隔符
+        totalProfit.textContent = `${profitValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        // 如果需要显示正负号，可以在这里判断并添加
+        if (profitValue > 0) {
+            totalProfit.textContent = `+${totalProfit.textContent}`;
+            totalProfit.style.color = "#f1403d"; // 假设红色表示正收益
+        } else if (profitValue < 0) {
+            totalProfit.style.color = "#0dbd70"; // 假设绿色表示负收益
+        } else {
+            totalProfit.style.color = ""; // 默认颜色
+        }
         
     } catch (error) {
-        console.error("更新收益时出错:", error);
-        const totalReturnPercent = document.getElementById('total-profit');
-        if (totalReturnPercent) {
-            totalReturnPercent.textContent = "数据异常";
-            totalReturnPercent.style.color = "red";
+        console.error("更新总收益时出错:", error);
+        const totalProfitElement = document.getElementById('total-profit'); // 修正变量名
+        if (totalProfitElement) {
+            totalProfitElement.textContent = "数据异常";
+            totalProfitElement.style.color = "red";
         }
     }
 }
