@@ -343,7 +343,7 @@ function updateHoldings(portfolioData) {
     const sortedHoldings = [...holdings].sort((a, b) => b.returnPercent - a.returnPercent);
     
     // 2. 获取表格tbody元素
-    const tbody = document.querySelector('.assets-table tbody');
+    const tbody = document.querySelector('.table-con tbody');
     tbody.innerHTML = ''; // 清空现有内容
     
     // 3. 生成新行
