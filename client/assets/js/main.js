@@ -1,6 +1,10 @@
 // 全局变量声明
 let assetChart, returnChart, radarChart;
 
+// --- 新增 ---
+// 用于存储从API获取的近1月真实业绩数据
+let monthlyPerformanceData = null; 
+
 // 初始化菜单交互
 function initMenuInteraction() {
     const menuItems = document.querySelectorAll('.menu-item');
@@ -65,29 +69,28 @@ function initAssetChart() {
     });
 }
 
-// 初始化收益率走势图
 function initReturnChart() {
     const returnCtx = document.getElementById('returnChart').getContext('2d');
     returnChart = new Chart(returnCtx, {
         type: 'line',
         data: {
-            labels: ['4月', '5月', '6月', '7月'],
+            labels: [], // 初始标签为空
             datasets: [
                 {
                     label: '投资组合',
-                    data: [4.2, 5.0, 6.2, 7.5],
+                    data: [], // 初始数据为空
                     borderColor: '#2a5dff',
                     tension: 0.3,
-                    pointRadius: 4,
+                    pointRadius: 0, // 在数据点多的时候可以不显示点
                     pointBackgroundColor: '#fff',
                     pointBorderWidth: 2
                 },
                 {
-                    label: '沪深300',
-                    data: [3.2, 4.1, 5.3, 6.0],
+                    label: '沪深300', // 您可以根据实际的基准指数修改
+                    data: [], // 初始数据为空
                     borderColor: '#ff6b6b',
                     tension: 0.3,
-                    pointRadius: 4,
+                    pointRadius: 0,
                     pointBackgroundColor: '#fff',
                     pointBorderWidth: 2
                 }
@@ -103,52 +106,217 @@ function initReturnChart() {
                     },
                     ticks: {
                         callback: function(value) {
-                            return value + '%';
+                            return value.toFixed(2) + '%'; // 统一保留两位小数
                         }
                     }
                 },
                 x: {
                     grid: {
                         display: false
+                    },
+                    ticks: {
+                         // 当数据点很多时，自动跳过一些标签以避免重叠
+                        autoSkip: true,
+                        maxTicksLimit: 10
                     }
                 }
             },
             plugins: {
                 legend: {
-                    display: false
+                    display: false // 我们使用HTML自定义的图例
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y.toFixed(2) + '%';
+                            }
+                            return label;
+                        }
+                    }
                 }
             }
         }
     });
 }
 
-// 初始化时间筛选交互
+// --- 【全新升级版】随机数据生成器 ---
+// 生成更真实、波动性更强、更不规则的业绩数据
+function generateRandomPerformanceData(days) {
+    const data = [];
+    let cumulativePortfolioReturn = 0;
+    let cumulativeBenchmarkReturn = 0;
+
+    // --- 模拟参数设定 (可调整以改变行为) ---
+    const marketYearlyReturn = 0.08;      // 假设市场年化回报率为 8%
+    const marketYearlyVolatility = 0.20;  // 假设市场年化波动率为 20% (波动更大)
+    
+    // 将年化数据转换为日化数据 (一年约252个交易日)
+    const marketDailyDrift = marketYearlyReturn / 252;
+    const marketDailyVolatility = marketYearlyVolatility / Math.sqrt(252);
+
+    // --- 投资组合特定参数 ---
+    const portfolioBeta = 1.1; // 组合Beta为1.1，意味着它比市场波动性高10%
+    const portfolioAlphaDrift = 0.0001; // 组合的Alpha漂移，代表每天有0.01%的微小超额收益趋势
+    const portfolioAlphaVolatility = 0.008; // 组合的Alpha波动率，这是组合独特的、非系统性的风险
+
+    for (let i = 0; i < days; i++) {
+        // 1. 生成基准指数的随机日回报
+        // 使用多个随机数相加来更好地模拟正态分布
+        const benchmarkRandomComponent = (Math.random() + Math.random() + Math.random() - 1.5);
+        let benchmarkDailyChange = marketDailyDrift + benchmarkRandomComponent * marketDailyVolatility;
+
+        // 2. 生成投资组合的日回报
+        // 它由两部分组成：跟随市场的Beta部分 + 自身独特的Alpha部分
+        const portfolioRandomComponent = (Math.random() - 0.5) * 2;
+        const alphaComponent = portfolioAlphaDrift + portfolioRandomComponent * portfolioAlphaVolatility;
+        const betaComponent = portfolioBeta * (benchmarkDailyChange - marketDailyDrift); // Beta应作用于市场的超额漂移部分
+        let portfolioDailyChange = marketDailyDrift + betaComponent + alphaComponent;
+
+        // 3. 以小概率引入“随机冲击事件”来制造剧烈波动
+        if (Math.random() < 0.03) { // 每天有 3% 的概率发生冲击事件
+            const shockMultiplier = (Math.random() > 0.5 ? 1 : -1) * (2 + Math.random() * 2); // 冲击可以是2到4倍的涨或跌
+            
+            if (Math.random() > 0.5) { // 冲击可能只影响组合（例如个股财报）
+                 portfolioDailyChange *= shockMultiplier;
+            } else { // 或者影响整个市场
+                 portfolioDailyChange *= shockMultiplier;
+                 benchmarkDailyChange *= shockMultiplier * 0.8; // 市场也受影响，但可能幅度略小
+            }
+        }
+
+        // 4. 累加每日回报（并转换为百分比）
+        cumulativePortfolioReturn += portfolioDailyChange * 100;
+        cumulativeBenchmarkReturn += benchmarkDailyChange * 100;
+
+        // 5. 生成日期标签
+        const date = new Date();
+        date.setDate(date.getDate() - (days - 1 - i));
+        
+        data.push({
+            date: date.toISOString().split('T')[0],
+            dailyReturnPercentage: cumulativePortfolioReturn,
+            benchmarkReturnPercentage: cumulativeBenchmarkReturn
+        });
+    }
+    return data;
+}
+
+// --- 新增函数 ---
+// 统一更新收益率走势图的逻辑
+function updateReturnChart(timeframe) {
+    let performanceData;
+
+    switch (timeframe) {
+        case '1m':
+            if (monthlyPerformanceData) {
+                performanceData = monthlyPerformanceData;
+            } else {
+                console.log("正在加载近1月数据...");
+                // 如果数据还没加载好，可以显示一个加载动画或暂时不更新
+                return;
+            }
+            break;
+        case '3m':
+            performanceData = generateRandomPerformanceData(90); // 生成90天模拟数据
+            break;
+        case '1y':
+            performanceData = generateRandomPerformanceData(365); // 生成365天模拟数据
+            break;
+        default:
+            return;
+    }
+    
+    // 从数据中提取标签和数据集
+    const labels = performanceData.map(item => {
+        // 格式化日期，例如 "07-29"
+        const date = new Date(item.date);
+        return `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    });
+    const portfolioReturns = performanceData.map(item => item.dailyReturnPercentage);
+    const benchmarkReturns = performanceData.map(item => item.benchmarkReturnPercentage);
+
+    // 更新Chart.js实例的数据
+    if (returnChart) {
+        returnChart.data.labels = labels;
+        returnChart.data.datasets[0].data = portfolioReturns;
+        returnChart.data.datasets[1].data = benchmarkReturns;
+        // 根据数据点数量调整是否显示点
+        const showPoints = timeframe === '1m';
+        returnChart.data.datasets.forEach(dataset => {
+            dataset.pointRadius = showPoints ? 3 : 0;
+        });
+
+        returnChart.update(); // 重新渲染图表
+    }
+}
+
+// --- 重大修改 ---
+// 初始化时间筛选交互，现在它只负责调用更新函数
 function initTimeFilterInteraction() {
-    const timeTabs = document.querySelectorAll('.time-tab');
+    const timeTabs = document.querySelectorAll('.return-container .time-tab');
     timeTabs.forEach(tab => {
         tab.addEventListener('click', function() {
+            // 更新UI的 active 状态
             timeTabs.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
             
-            // 根据选择的时间范围更新数据
-            if (this.textContent === '近1月') {
-                returnChart.data.labels = ['上周', '本周初', '本周中', '周末'];
-                returnChart.data.datasets[0].data = [6.8, 7.0, 7.2, 7.5];
-                returnChart.data.datasets[1].data = [5.8, 5.9, 6.0, 6.0];
-            } else if (this.textContent === '近3月') {
-                returnChart.data.labels = ['4月', '5月', '6月', '7月'];
-                returnChart.data.datasets[0].data = [4.2, 5.0, 6.2, 7.5];
-                returnChart.data.datasets[1].data = [3.2, 4.1, 5.3, 6.0];
-            } else {
-                returnChart.data.labels = ['Q1', 'Q2', 'Q3', 'Q4'];
-                returnChart.data.datasets[0].data = [1.8, 5.2, 6.8, 7.5];
-                returnChart.data.datasets[1].data = [1.2, 4.5, 5.7, 6.0];
+            // 根据点击的按钮调用图表更新函数
+            const timeframeText = this.textContent;
+            if (timeframeText === '近1月') {
+                updateReturnChart('1m');
+            } else if (timeframeText === '近3月') {
+                updateReturnChart('3m');
+            } else if (timeframeText === '近1年') {
+                updateReturnChart('1y');
             }
-            
-            returnChart.update();
         });
     });
 }
+
+// --- 新增函数 ---
+// 从API获取近30天的业绩数据
+async function fetchDailyPerformanceData() {
+    try {
+        const response = await fetch('http://localhost:3001/api/portfolio/daily-performance');
+        if (!response.ok) {
+            throw new Error(`HTTP错误! 状态码: ${response.status}`);
+        }
+        const apiResponse = await response.json();
+        
+        if (apiResponse.code !== 200 || !apiResponse.data) {
+            throw new Error('API返回数据格式错误或状态码非200');
+        }
+
+        console.log("成功获取每日业绩数据:", apiResponse.data);
+        
+        // 将获取到的真实数据存储在全局变量中
+        monthlyPerformanceData = apiResponse.data;
+
+        // 数据加载成功后，默认更新一次图表（根据默认选中的tab）
+        const activeTab = document.querySelector('.return-container .time-tab.active');
+        if (activeTab) {
+            const timeframeText = activeTab.textContent;
+            if (timeframeText === '近1月') updateReturnChart('1m');
+            else if (timeframeText === '近3月') updateReturnChart('3m');
+            else if (timeframeText === '近1年') updateReturnChart('1y');
+        } else {
+             updateReturnChart('3m'); // 如果没有active的tab，默认显示3个月
+        }
+
+    } catch (error) {
+        console.error('获取每日业绩数据失败:', error);
+        // 如果API失败，可以依然显示模拟数据
+        updateReturnChart('3m');
+    }
+}
+
 
 // 初始化刷新按钮交互
 function initRefreshButtons() {
@@ -495,12 +663,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- 交互功能初始化 (只执行一次) ---
     initMenuInteraction();
     initUserAvatarInteraction();
-    initTimeFilterInteraction();
+    // initTimeFilterInteraction();
     initRefreshButtons();
     
     // --- 图表初始化 (只执行一次) ---
     initAssetChart(); // 初始化空的资产饼图
     initReturnChart(); // 初始化空的收益率折线图
+    initTimeFilterInteraction(); // 初始化点击事件
 
     // --- 雷达图初始化 (来自您的第二个监听器) ---
     const radarCtx = document.getElementById('radarChart').getContext('2d');
@@ -561,6 +730,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchAssetData();           // 获取投资组合、总收益等数据
     fetchAndUpdateRadarChart();   // 获取雷达图数据
     fetchAssetAllocationData(); // 【关键】获取资产分布饼图数据
+    fetchDailyPerformanceData(); // 【新增】获取每日业绩数据来填充折线图
 
     
     // --- 其他交互逻辑 (来自您的第二个监听器) ---
