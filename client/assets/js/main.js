@@ -307,12 +307,12 @@ function updateTotalReturnPercent(data) {
         // 根据正负设置样式
         if (returnValue >= 0) {
             totalReturnPercent.style.color ="#0dbd70";
-            returnChange.textContent = "优于大盘";
+            returnChange.textContent = "Positive Returns";
             returnChange.style.color = "#0dbd70";
             returnChange.className = "growth-indicator growth-up";
         } else {
             totalReturnPercent.style.color = "#f1403d";
-            returnChange.textContent = "低于大盘";
+            returnChange.textContent = "Negative Returns";
             returnChange.style.color = "#f1403d";
             returnChange.className = "growth-indicator growth-down";
         }
@@ -351,9 +351,9 @@ function updateTotalProfit(data) {
         // 如果需要显示正负号，可以在这里判断并添加
         if (profitValue > 0) {
             totalProfit.textContent = `+${totalProfit.textContent}`;
-            totalProfit.style.color = "#f1403d"; // 假设红色表示正收益
+            totalProfit.style.color = "#0dbd70"; // 假设绿色表示正收益
         } else if (profitValue < 0) {
-            totalProfit.style.color = "#0dbd70"; // 假设绿色表示负收益
+            totalProfit.style.color = "#f1403d"; // 假设红色表示负收益
         } else {
             totalProfit.style.color = ""; // 默认颜色
         }
@@ -425,31 +425,84 @@ function updateHoldings(portfolioData) {
 
 }
 
+async function fetchAssetAllocationData() {
+    try {
+        const response = await fetch('http://localhost:3001/api/portfolio/asset-allocation');
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP错误! 状态码: ${response.status}, 响应: ${errorText}`);
+        }
+        
+        const apiResponse = await response.json();
+        console.log("资产分配API返回数据:", apiResponse); // 调试输出
 
+        if (apiResponse.code !== 200 || !apiResponse.data || !Array.isArray(apiResponse.data)) {
+            throw new Error(`API返回数据格式不正确或状态码非200: ${apiResponse.message}`);
+        }
 
-// 页面初始化
+        const labels = apiResponse.data.map(item => item.type);
+        const percentages = apiResponse.data.map(item => item.percentage);
+        
+        // 更新资产分布饼图
+        if (assetChart) {
+            assetChart.data.labels = labels;
+            assetChart.data.datasets[0].data = percentages;
+            assetChart.update(); // 更新图表 [5, 8, 9, 10]
+        }
+
+        // 更新图例（手动更新，因为 Chart.js 默认 legend display 为 false）
+        updateAssetChartLegend(apiResponse.data);
+
+        console.log('资产分布数据更新成功');
+        return true;
+
+    } catch (error) {
+        console.error('获取资产分配数据失败:', error);
+        // 您可以显示一个错误提示给用户，例如在图表下方显示“数据加载失败”
+        return false;
+    }
+}
+
+// 辅助函数：更新资产分布图的图例
+function updateAssetChartLegend(data) {
+    const legendContainer = document.querySelector('.chart-container .legend');
+    if (!legendContainer) return;
+
+    legendContainer.innerHTML = ''; // 清空现有图例
+
+    const colors = assetChart.data.datasets[0].backgroundColor; // 获取Chart.js图表使用的颜色
+
+    data.forEach((item, index) => {
+        const legendItem = document.createElement('div');
+        legendItem.className = 'legend-item';
+        
+        const colorDiv = document.createElement('div');
+        colorDiv.className = 'legend-color';
+        colorDiv.style.backgroundColor = colors[index % colors.length]; // 使用Chart.js的颜色循环
+        
+        const span = document.createElement('span');
+        span.textContent = `${item.type} ${item.percentage.toFixed(2)}%`;
+        
+        legendItem.appendChild(colorDiv);
+        legendItem.appendChild(span);
+        legendContainer.appendChild(legendItem);
+    });
+}
+
+// 页面初始化 - 唯一的初始化入口
 document.addEventListener('DOMContentLoaded', function() {
-    // 初始化交互功能
+    // --- 交互功能初始化 (只执行一次) ---
     initMenuInteraction();
     initUserAvatarInteraction();
     initTimeFilterInteraction();
     initRefreshButtons();
     
-    // 初始化图表
-    initAssetChart();
-    initReturnChart();
-    
-    // 首次获取数据
-    fetchAssetData();
-    
-    // 每30秒更新一次数据
-    // setInterval(fetchAssetData, 30000);
-});
+    // --- 图表初始化 (只执行一次) ---
+    initAssetChart(); // 初始化空的资产饼图
+    initReturnChart(); // 初始化空的收益率折线图
 
-
-// demo
-document.addEventListener('DOMContentLoaded', function() {
-    // 初始化雷达图
+    // --- 雷达图初始化 (来自您的第二个监听器) ---
     const radarCtx = document.getElementById('radarChart').getContext('2d');
     radarChart = new Chart(radarCtx, {
         type: 'radar',
@@ -503,59 +556,47 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    fetchAndUpdateRadarChart();
 
-    // 时间筛选交互
-    const timeTabs = document.querySelectorAll('.time-tab');
-    timeTabs.forEach(tab => {
+    // --- 首次获取数据 (现在所有的数据获取都在这里) ---
+    fetchAssetData();           // 获取投资组合、总收益等数据
+    fetchAndUpdateRadarChart();   // 获取雷达图数据
+    fetchAssetAllocationData(); // 【关键】获取资产分布饼图数据
+
+    
+    // --- 其他交互逻辑 (来自您的第二个监听器) ---
+    document.querySelectorAll('.tab').forEach(tab => {
         tab.addEventListener('click', function() {
-            timeTabs.forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
         });
     });
     
-    // 菜单项交互
-    const menuItems = document.querySelectorAll('.menu-item');
-    menuItems.forEach(item => {
-        item.addEventListener('click', function() {
-            menuItems.forEach(i => i.classList.remove('active'));
+    document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.category-tab').forEach(t => {
+                t.classList.remove('active');
+            });
             this.classList.add('active');
         });
     });
+    
+    document.querySelector('.btn.add').addEventListener('click', function() {
+        alert('添加自选股票功能');
+    });
+    
+    document.querySelector('.btn.home').addEventListener('click', function() {
+        alert('添加到首页');
+    });
 
-
-    //tmp2
-     // 自选股票行情交互逻辑
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-        
-        // 市场行情分析交互逻辑
-        document.querySelectorAll('.category-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.category-tab').forEach(t => {
-                    t.classList.remove('active');
-                });
-                this.classList.add('active');
-            });
-        });
-        
-        // 添加按钮事件
-        document.querySelector('.btn.add').addEventListener('click', function() {
-            alert('添加自选股票功能');
-        });
-        
-        document.querySelector('.btn.home').addEventListener('click', function() {
-            alert('添加到首页');
-        });
+    // 如果需要定时刷新，可以在这里统一设置
+    // setInterval(fetchAssetData, 30000);
+    // setInterval(fetchAssetAllocationData, 30000);
+    // setInterval(fetchAndUpdateRadarChart, 30000);
 });
