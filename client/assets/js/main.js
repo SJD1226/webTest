@@ -1,5 +1,5 @@
 // 全局变量声明
-let assetChart, returnChart;
+let assetChart, returnChart, radarChart;
 
 // 初始化菜单交互
 function initMenuInteraction() {
@@ -210,6 +210,32 @@ async function fetchAssetData() {
     }
 }
 
+// 拉取评分数据并更新雷达图
+async function fetchAndUpdateRadarChart() {
+    try {
+        const response = await fetch('http://localhost:3001/api/portfolio/rating');
+        if (!response.ok) throw new Error(`HTTP错误! 状态码: ${response.status}`);
+        const apiResponse = await response.json();
+        if (!apiResponse.data) throw new Error("API返回数据中缺少data字段");
+
+        // 映射API数据到雷达图顺序
+        const radarData = [
+            apiResponse.data.averageReturnOnAssetsScore,      // 盈利能力
+            apiResponse.data.averageDebtToEquityScore,        // 抗风险能力
+            apiResponse.data.averageDiscountedCashFlowScore,  // 可复制性
+            apiResponse.data.averagePriceToBookScore,         // 持股分散度
+            apiResponse.data.averagePriceToEarningsScore      // 稳定性
+        ];
+
+        if (radarChart) {
+            radarChart.data.datasets[0].data = radarData;
+            radarChart.update();
+        }
+    } catch (error) {
+        console.error('获取雷达评分数据失败:', error);
+    }
+}
+
 // 更新总资产显示
 function updateTotalMarketValue(data) {
     try {
@@ -349,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchAssetData();
     
     // 每30秒更新一次数据
-    setInterval(fetchAssetData, 30000);
+    // setInterval(fetchAssetData, 30000);
 });
 
 
@@ -357,13 +383,13 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     // 初始化雷达图
     const radarCtx = document.getElementById('radarChart').getContext('2d');
-    const radarChart = new Chart(radarCtx, {
+    radarChart = new Chart(radarCtx, {
         type: 'radar',
         data: {
-            labels: ['盈利能力', '抗风险能力', '可复制性', '持股分散度', '稳定性'],
+            labels: ['DiscountedCashFlowScore', 'ReturnOnAssetsScore', 'DebtToEquityScore', 'PriceToEarningsScore', 'PriceToBookScore'],
             datasets: [{
-                label: '评估指标',
-                data: [40, 55, 35, 45, 50],
+                label: 'Rating',
+                data: [0, 0, 0, 0, 0], // 初始为0
                 fill: true,
                 backgroundColor: 'rgba(255, 107, 107, 0.4)',
                 borderColor: '#f1403d',
@@ -379,9 +405,9 @@ document.addEventListener('DOMContentLoaded', function() {
             scales: {
                 r: {
                     min: 0,
-                    max: 60,
+                    max: 5,
                     ticks: {
-                        stepSize: 15,
+                        stepSize: 1,
                         display: false
                     },
                     grid: {
@@ -408,6 +434,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
+    fetchAndUpdateRadarChart();
 
     // 时间筛选交互
     const timeTabs = document.querySelectorAll('.time-tab');
