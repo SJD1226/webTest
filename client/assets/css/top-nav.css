@@ -9,6 +9,9 @@
     justify-content: space-between;
     position: sticky;
     top: 0;
+    left: 0; /* 添加左侧定位 */
+    right: 0; /* 添加右侧定位 */
+    width: 100%; /* 添加宽度100% */
     z-index: 99;
 }
 
