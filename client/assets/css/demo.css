@@ -57,6 +57,19 @@
     border-bottom: 1px solid #f0f3fa;
     padding-bottom: 15px;
 }
+.table-con {
+    max-height: 400px; /* 固定最大高度 */
+    overflow-y: auto; /* 添加垂直滚动条 */
+    position: relative; /* 定位上下文 */
+  }
+
+  /* 固定表头 */
+  .table-con thead th {
+    position: sticky; /* 固定位置 */
+    top: 0; /* 固定在顶部 */
+    z-index: 10; /* 保证在滚动时保持置顶 */
+    background-color: #f5f5f5; /* 保证表头背景不透明 */
+  }
 
 .section-title {
     font-size: 24px;
