@@ -351,3 +351,115 @@ document.addEventListener('DOMContentLoaded', function() {
     // 每30秒更新一次数据
     setInterval(fetchAssetData, 30000);
 });
+
+
+// demo
+document.addEventListener('DOMContentLoaded', function() {
+    // 初始化雷达图
+    const radarCtx = document.getElementById('radarChart').getContext('2d');
+    const radarChart = new Chart(radarCtx, {
+        type: 'radar',
+        data: {
+            labels: ['盈利能力', '抗风险能力', '可复制性', '持股分散度', '稳定性'],
+            datasets: [{
+                label: '评估指标',
+                data: [40, 55, 35, 45, 50],
+                fill: true,
+                backgroundColor: 'rgba(255, 107, 107, 0.4)',
+                borderColor: '#f1403d',
+                pointBackgroundColor: '#f1403d',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    min: 0,
+                    max: 60,
+                    ticks: {
+                        stepSize: 15,
+                        display: false
+                    },
+                    grid: {
+                        color: 'rgba(240, 243, 250, 0.8)',
+                        lineWidth: 1.5
+                    },
+                    angleLines: {
+                        color: 'rgba(240, 243, 250, 0.8)',
+                        lineWidth: 1.5
+                    },
+                    pointLabels: {
+                        display: false,
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    // 时间筛选交互
+    const timeTabs = document.querySelectorAll('.time-tab');
+    timeTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            timeTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    
+    // 菜单项交互
+    const menuItems = document.querySelectorAll('.menu-item');
+    menuItems.forEach(item => {
+        item.addEventListener('click', function() {
+            menuItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+
+    //tmp2
+     // 自选股票行情交互逻辑
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // 市场行情分析交互逻辑
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.category-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // 添加按钮事件
+        document.querySelector('.btn.add').addEventListener('click', function() {
+            alert('添加自选股票功能');
+        });
+        
+        document.querySelector('.btn.home').addEventListener('click', function() {
+            alert('添加到首页');
+        });
+});

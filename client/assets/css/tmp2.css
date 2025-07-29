@@ -1,0 +1,733 @@
+
+        
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+/* 主内容区布局 */
+.dashboard-layout {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    min-width: 300px;
+    background-color: white;
+    border-radius: 24px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    padding: 25px;
+}
+
+/* 左列：自选股票行情 */
+.left-column {
+    flex: 2; /* 调整为2份 */
+    min-width: 350px;
+}
+
+/* 右列：市场行情分析 */
+.right-column {
+    flex: 1; /* 调整为1份 */
+    min-width: 350px;
+}
+.dashboard-container {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+}
+
+.dashboard-section {
+    flex: 1;
+    min-width: 300px;
+    background-color: white;
+    border-radius: 24px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    padding: 25px;
+}
+
+.dashboard-section:first-child {
+    flex: 1.5;
+}
+
+.dashboard-section:nth-child(2) {
+    flex: 1.2;
+}
+
+.dashboard-section:last-child {
+    flex: 0.8;
+}
+        
+        .stock-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+        
+      
+        
+        .dashboard-section {
+            background-color: white;
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .panel {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .panel:last-child {
+            margin-bottom: 0;
+        }
+        
+        .panel-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1d28;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #f0f3fa;
+            padding-bottom: 15px;
+        }
+        
+        .assets-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .assets-table th {
+            text-align: left;
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 600;
+            padding: 12px 10px;
+            border-bottom: 1px solid #f0f3fa;
+        }
+        
+        .assets-table td {
+            padding: 16px 10px;
+            border-bottom: 1px solid #f0f3fa;
+            font-weight: 500;
+        }
+        
+        .asset-name {
+            font-weight: 600;
+        }
+        
+        .positive-change {
+            color: #0dbd70;
+            font-weight: 700;
+        }
+        
+        .negative-change {
+            color: #f1403d;
+            font-weight: 700;
+        }
+        
+        .rank {
+            background: #f0f3fa;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .cash-balance {
+            background: #f0f8ff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            font-weight: 600;
+            color: #2a5dff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 250px;
+        }
+        
+        .radar-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7280;
+            padding: 0 20px;
+        }
+        
+        .time-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .time-tab {
+            padding: 8px 16px;
+            background: #f8f9fc;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .time-tab.active {
+            background: #2a5dff;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .continuous-earnings {
+            background: #f0f8ff;
+            border-radius: 16px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .continuous-earnings-text {
+            font-weight: 600;
+            color: #2a5dff;
+        }
+        
+        .show-earnings {
+            background: #2a5dff;
+            color: white;
+            border-radius: 16px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1d28;
+        }
+        
+        .calendar-arrows {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .arrow-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f0f3fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        
+        .day-header {
+            text-align: center;
+            padding: 12px 0;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .day-cell {
+            background: #f8f9fc;
+            border-radius: 12px;
+            aspect-ratio: 1/1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .day-number {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .day-earning {
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .positive-earning {
+            color: #0dbd70;
+        }
+        
+        .negative-earning {
+            color: #f1403d;
+        }
+        
+        .today-cell {
+            border: 2px solid #2a5dff;
+            background: #f0f8ff;
+        }
+        
+        .today-text {
+            font-size: 14px;
+            color: #2a5dff;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        
+        .cash-icon {
+            font-size: 20px;
+        }
+        
+        .update-notice {
+            font-size: 12px;
+            color: #6b7280;
+            text-align: right;
+            margin-top: 10px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: center;
+            position: relative;
+            padding: 0 0 25px;
+        }
+        
+        .header .tabs {
+            display: flex;
+            background: #f0f3fa;
+            border-radius: 24px;
+            padding: 4px;
+        }
+        
+        .tab-item {
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-item.active {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            color: #2a5dff;
+        }
+        
+        .category-tabs {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 0 0 15px;
+            margin-bottom: 20px;
+            scrollbar-width: none;
+        }
+        
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .category-tab {
+            padding: 8px 16px;
+            background: #f0f3fa;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .category-tab.active {
+            background: #2a5dff;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .time-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+        
+        .trade-time {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .indices-container {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .index-card {
+            background: white;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            min-width: 180px;
+            flex: 1;
+        }
+        
+        .index-name {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .index-value {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .index-change {
+            display: flex;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .index-change.negative {
+            color: #f1403d;
+        }
+        
+        .index-change.positive {
+            color: #0dbd70;
+        }
+        
+        .market-overview {
+            background: white;
+            border-radius: 16px;
+            padding: 22px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+        
+        .market-overview-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: #f8f9fc;
+            border-radius: 14px;
+            padding: 15px;
+        }
+        
+        .stat-title {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .up-down-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .stat-item .label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .stat-item .value {
+            font-weight: 700;
+        }
+        
+        .positive-value {
+            color: #0dbd70;
+        }
+        
+        .negative-value {
+            color: #f1403d;
+        }
+        
+        .volume-info {
+            background: #f0f8ff;
+            border-radius: 14px;
+            padding: 15px;
+        }
+        
+        .volume-value {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: #2a5dff;
+        }
+        
+        .volume-change {
+            font-size: 14px;
+            color: #0dbd70;
+            font-weight: 600;
+        }
+        
+        .bar-graph {
+            height: 6px;
+            background: #f0f3fa;
+            border-radius: 3px;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bar-graph-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 38%;
+            background: linear-gradient(90deg, #0dbd70, #2a5dff);
+            border-radius: 3px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #1a1d28;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f3fa;
+        }
+        
+        /* 指数头部区域 */
+        .indices-header {
+            display: flex;
+            padding: 16px 20px;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .index-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .index-name {
+            font-size: 14px;
+            color: #666;
+            margin-right: 8px;
+        }
+        
+        .index-value {
+            font-size: 18px;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        
+        .index-change {
+            font-size: 14px;
+        }
+        
+        .down {
+            color: #00b050;
+        }
+        
+        .up {
+            color: #f43c59;
+        }
+        
+        /* 功能导航区 */
+        .function-nav {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            background: #fafafa;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-right: auto;
+        }
+        
+        .tab {
+            padding: 8px 16px;
+            font-size: 16px;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            color: #1677ff;
+            border-bottom: 2px solid #1677ff;
+            font-weight: 500;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 6px 14px;
+            font-size: 14px;
+            background: #1677ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn.add {
+            background: #1677ff;
+        }
+        
+        .btn.home {
+            background: #00b050;
+        }
+        
+        .filter {
+            display: flex;
+            margin-left: 20px;
+        }
+        
+        .filter-btn {
+            padding: 6px 12px;
+            font-size: 14px;
+            background: #f5f5f5;
+            color: #666;
+            border: 1px solid #e1e1e1;
+            cursor: pointer;
+        }
+        
+        .filter-btn.active {
+            background: #e6f4ff;
+            color: #1677ff;
+            border-color: #91caff;
+        }
+        
+        /* 表格样式 */
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .stock-table th {
+            padding: 12px 16px;
+            background: #fafafa;
+            color: #666;
+            font-weight: 500;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        .stock-table tr {
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stock-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .stock-table td {
+            padding: 16px;
+            font-size: 14px;
+        }
+        
+        .stock-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stock-name {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .stock-code {
+            font-size: 13px;
+            color: #999;
+        }
+        
+        .stock-price {
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .stock-change {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .change-value {
+            font-size: 15px;
+            margin-bottom: 2px;
+        }
+        
+        .change-percent {
+            font-size: 13px;
+        }
+        
+        .volume, .market-cap, .ytd-change {
+            color: #666;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 1200px) {
+            .dashboard-layout {
+                flex-direction: column;
+            }
+            .left-column, .right-column {
+                min-width: 100%;
+            }
+        }

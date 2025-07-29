@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="assets/css/sidebar.css">
     <link rel="stylesheet" href="assets/css/top-nav.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/demo.css">
+     <link rel="stylesheet" href="assets/css/tmp2.css">
 </head>
 <body>
     <!-- 侧边导航栏 -->
@@ -91,7 +93,7 @@
         </div>
         
         <!-- 金融数据面板 -->
-        <div class="dashboard-container">
+        <div class="dashboard-container-financial">
             <div class="financial-dashboard">
                 
                 
@@ -185,9 +187,572 @@
                 </div>
             </div>
         </div>
+        <!-- 集成金融数据面板 -->
+            <div class="dashboard-container">
+                <!-- 左列：收益分布 -->
+                <div class="dashboard-section">
+                    <!-- 收益分布面板内容 -->
+                      <!-- 收益分布 -->
+            <div class="panel">
+                <div class="panel-title">收益分布</div>
+                
+                <div class="time-tabs">
+                    <div class="time-tab">日</div>
+                    <div class="time-tab">周</div>
+                    <div class="time-tab active">月</div>
+                    <div class="time-tab">年</div>
+                </div>
+                
+                <div class="continuous-earnings">
+                    <span class="continuous-earnings-text">您本月已连续9天正收益，点击晒晒收益连红</span>
+                    <div class="show-earnings">晒收益</div>
+                </div>
+                
+                <div class="calendar-header">
+                    <div class="calendar-title">2025年7月</div>
+                    <div class="calendar-arrows">
+                        <div class="arrow-btn"><i class="fas fa-chevron-left"></i></div>
+                        <div class="arrow-btn"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </div>
+                
+                <div class="calendar-grid">
+                    <div class="day-header">一</div>
+                    <div class="day-header">二</div>
+                    <div class="day-header">三</div>
+                    <div class="day-header">四</div>
+                    <div class="day-header">五</div>
+                    <div class="day-header">六</div>
+                    <div class="day-header">日</div>
+                    
+                    <!-- 日历内容 -->
+                    <div class="day-cell"></div>
+                    <div class="day-cell"></div>
+                    <div class="day-cell"></div>
+                    <div class="day-cell"></div>
+                    <div class="day-cell">
+                        <div class="day-number">1</div>
+                        <div class="day-earning positive-earning">+0.53</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">2</div>
+                        <div class="day-earning negative-earning">-39.08</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">3</div>
+                        <div class="day-earning positive-earning">+379.24</div>
+                    </div>
+                    
+                    <div class="day-cell">
+                        <div class="day-number">4</div>
+                        <div class="day-earning negative-earning">-180.91</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">5</div>
+                        <div class="day-earning positive-earning">+31.99</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">6</div>
+                        <div class="day-earning positive-earning">+265.90</div>
+                    </div>
+                    <div class="day-cell"></div>
+                    <div class="day-cell"></div>
+                    <div class="day-cell"></div>
+                    
+                    <div class="day-cell"></div>
+                    <div class="day-cell"></div>
+                    <div class="day-cell">
+                        <div class="day-number">13</div>
+                        <div class="day-earning positive-earning">+0.96</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">14</div>
+                        <div class="day-earning positive-earning">+229.12</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">15</div>
+                        <div class="day-earning positive-earning">+282.35</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">16</div>
+                        <div class="day-earning positive-earning">+95.37</div>
+                    </div>
+                    
+                    <div class="day-cell">
+                        <div class="day-number">17</div>
+                        <div class="day-earning positive-earning">+334.75</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">18</div>
+                        <div class="day-earning positive-earning">+320.92</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">19</div>
+                        <div class="day-earning">0.00</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">20</div>
+                        <div class="day-earning">0.00</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">21</div>
+                        <div class="day-earning positive-earning">+120.88</div>
+                    </div>
+                    <div class="day-cell"></div>
+                    
+                    <div class="day-cell"></div>
+                    <div class="day-cell">
+                        <div class="day-number">22</div>
+                        <div class="day-earning negative-earning">-1.72</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">23</div>
+                        <div class="day-earning positive-earning">+248.44</div>
+                    </div>
+                    <div class="day-cell today-cell">
+                        <div class="day-number">24</div>
+                        <div class="day-earning positive-earning">+198.07</div>
+                        <div class="today-text">今</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">25</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">26</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">27</div>
+                        <div class="day-earning positive-earning">+1.05</div>
+                    </div>
+                    
+                    <div class="day-cell">
+                        <div class="day-number">28</div>
+                        <div class="day-earning positive-earning">+0.96</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">29</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">30</div>
+                    </div>
+                    <div class="day-cell">
+                        <div class="day-number">31</div>
+                    </div>
+                    <div class="day-cell"></div>
+                    <div class="day-cell"></div>
+                </div>
+                
+                <div class="update-notice">更新</div>
+            </div>
+                </div>
+                
+                <!-- 中列：雷达图和资产列表 -->
+                <div class="dashboard-section">
+                    <!-- 雷达图面板内容 -->
+                    <!-- 资产列表面板内容 -->
+                       
+            <!-- 雷达图 -->
+            <div class="panel">
+                <div class="panel-title">雷达图</div>
+                
+                <div class="chart-wrapper">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                
+                <div class="radar-labels">
+                    <span>可复制性</span>
+                    <span>持股分散度</span>
+                    <span>盈利能力</span>
+                    <span>抗风险能力</span>
+                    <span>稳定性</span>
+                </div>
+            </div>
+            
+            <!-- 资产列表 -->
+            <div class="panel">
+                <div class="panel-title">
+                    <span>资产列表</span>
+                    <div>排序</div>
+                </div>
+                
+                <table class="assets-table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>持仓</th>
+                            <th>实时涨跌</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="asset-name">股票A</td>
+                            <td>10000</td>
+                            <td class="positive-change">+3.2%</td>
+                            <td><div class="rank">1</div></td>
+                        </tr>
+                        <tr>
+                            <td class="asset-name">股票B</td>
+                            <td>8000</td>
+                            <td class="positive-change">+2.7%</td>
+                            <td><div class="rank">2</div></td>
+                        </tr>
+                        <tr>
+                            <td class="asset-name">债券C</td>
+                            <td>8000</td>
+                            <td class="positive-change">+2.8%</td>
+                            <td><div class="rank">1</div></td>
+                        </tr>
+                        <tr>
+                            <td class="asset-name">基金D</td>
+                            <td>8000</td>
+                            <td class="positive-change">+2.7%</td>
+                            <td><div class="rank">2</div></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="cash-balance">
+                    <i class="fas fa-money-bill-wave cash-icon"></i>
+                    <span>现金：20000</span>
+                </div>
+            </div>
+        </div>
+                </div>
+            
+    <!--tmp2-->
+    <div class="dashboard-container">
+                <!-- 左列：收益分布 -->
+                <div class="dashboard-section">
+
+                <div class="stock-container">
+                <!-- 顶部指数信息 -->
+                <div class="indices-header">
+                    <div class="index-item">
+                        <div class="index-name">上证指数</div>
+                        <div class="index-value">3594.94</div>
+                        <div class="index-change down">-0.30%</div>
+                    </div>
+                    <div class="index-item">
+                        <div class="index-name">深证成指</div>
+                        <div class="index-value">11165.25</div>
+                        <div class="index-change down">-0.25%</div>
+                    </div>
+                    <div class="index-item">
+                        <div class="index-name">创业板指</div>
+                        <div class="index-value">2338.33</div>
+                        <div class="index-change down">-0.30%</div>
+                    </div>
+                </div>
+                
+                <!-- 功能导航区域 -->
+                <div class="function-nav">
+                    <div class="tabs">
+                        <div class="tab active">自选股票</div>
+                        <div class="tab">自选基金</div>
+                        <div class="tab">自选组合</div>
+                    </div>
+                    
+                    <div class="buttons">
+                        <button class="btn add">添加自选股票</button>
+                        <button class="btn home">添加到首页</button>
+                    </div>
+                    
+                    <div class="filter">
+                        <button class="filter-btn active">全部</button>
+                    </div>
+                </div>
+                
+                <!-- 股票表格 -->
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th width="25%">股票</th>
+                            <th width="15%">当前价</th>
+                            <th width="15%">涨跌幅</th>
+                            <th width="15%">成交量</th>
+                            <th width="15%">总市值</th>
+                            <th width="15%">年初至今</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="stock-info">
+                                    <div class="stock-name">腾讯控股</div>
+                                    <div class="stock-code">HK00700</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="stock-price">549.0</div>
+                            </td>
+                            <td>
+                                <div class="stock-change down">
+                                    <div class="change-value">-8.0</div>
+                                    <div class="change-percent">(-1.44%)</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="volume">752.25万股</div>
+                            </td>
+                            <td>
+                                <div class="market-cap">5.03万亿</div>
+                            </td>
+                            <td>
+                                <div class="ytd-change up">+32.80%</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="stock-info">
+                                    <div class="stock-name">长江电力</div>
+                                    <div class="stock-code">SH600900</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="stock-price">28.92</div>
+                            </td>
+                            <td>
+                                <div class="stock-change down">
+                                    <div class="change-value">-0.02</div>
+                                    <div class="change-percent">(-0.07%)</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="volume">42.44万手</div>
+                            </td>
+                            <td>
+                                <div class="market-cap">7076.21亿</div>
+                            </td>
+                            <td>
+                                <div class="ytd-change up">+1.05%</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="stock-info">
+                                    <div class="stock-name">洋河股份</div>
+                                    <div class="stock-code">SZ002304</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="stock-price">68.47</div>
+                            </td>
+                            <td>
+                                <div class="stock-change down">
+                                    <div class="change-value">-0.42</div>
+                                    <div class="change-percent">(-0.61%)</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="volume">24896手</div>
+                            </td>
+                            <td>
+                                <div class="market-cap">1031.46亿</div>
+                            </td>
+                            <td>
+                                <div class="ytd-change down">-12.57%</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="stock-info">
+                                    <div class="stock-name">赣锋锂业</div>
+                                    <div class="stock-code">SZ002460</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="stock-price">39.61</div>
+                            </td>
+                            <td>
+                                <div class="stock-change up">
+                                    <div class="change-value">+0.21</div>
+                                    <div class="change-percent">(+0.53%)</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="volume">53.31万手</div>
+                            </td>
+                            <td>
+                                <div class="market-cap">799.00亿</div>
+                            </td>
+                            <td>
+                                <div class="ytd-change up">+13.64%</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="stock-info">
+                                    <div class="stock-name">比亚迪</div>
+                                    <div class="stock-code">SZ002594</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="stock-price">337.14</div>
+                            </td>
+                            <td>
+                                <div class="stock-change down">
+                                    <div class="change-value">-5.58</div>
+                                    <div class="change-percent">(-1.63%)</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="volume">90485手</div>
+                            </td>
+                            <td>
+                                <div class="market-cap">1.85万亿</div>
+                            </td>
+                            <td>
+                                <div class="ytd-change up">+19.27%</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="stock-info">
+                                    <div class="stock-name">迈瑞医疗</div>
+                                    <div class="stock-code">SZ300760</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="stock-price">231.90</div>
+                            </td>
+                            <td>
+                                <div class="stock-change down">
+                                    <div class="change-value">-0.17</div>
+                                    <div class="change-percent">(-0.07%)</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="volume">43308手</div>
+                            </td>
+                            <td>
+                                <div class="market-cap">2811.65亿</div>
+                            </td>
+                            <td>
+                                <div class="ytd-change down">-8.27%</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+
+        
+
+
+
+
+    
+                <div class="dashboard-section">
+
+<h2 class="section-title">市场行情分析</h2>
+                
+                <div class="header">
+                    <div class="tabs">
+                        <div class="tab-item active">今日行情</div>
+                    </div>
+                </div>
+                
+                <div class="category-tabs">
+                    <div class="category-tab active">沪深</div>
+                    <div class="category-tab">港股</div>
+                    <div class="category-tab">美股</div>
+                    <div class="category-tab">黄金</div>
+                    <div class="category-tab">国内债</div>
+                </div>
+                
+                <div class="time-container">
+                    <div class="trade-time">交易中 2025-07-25 11:03</div>
+                </div>
+                
+                <div class="indices-container">
+                    <div class="index-card">
+                        <div class="index-name">上证指数</div>
+                        <div class="index-value">3593.25</div>
+                        <div class="index-change negative">
+                            <span>-12.48</span>
+                            <span>-0.35%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="index-card">
+                        <div class="index-name">深证成指</div>
+                        <div class="index-value">11155.52</div>
+                        <div class="index-change negative">
+                            <span>-37.54</span>
+                            <span>-0.34%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="index-card">
+                        <div class="index-name">创业板指</div>
+                        <div class="index-value">2336.72</div>
+                        <div class="index-change negative">
+                            <span>-8.64</span>
+                            <span>-0.37%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="market-overview">
+                    <div class="market-overview-title">
+                        <i class="fas fa-chart-pie"></i> 市场总览
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-title">涨跌分布</div>
+                            <div class="up-down-stats">
+                                <div class="stat-item">
+                                    <span class="label">家上涨</span>
+                                    <span class="value">38%</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="label">涨</span>
+                                    <span class="value positive-value">2072</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="label">3153 跌</span>
+                                    <span class="value negative-value"></span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="label">涨停</span>
+                                    <span class="value positive-value">34</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="label">跌停</span>
+                                    <span class="value negative-value">5</span>
+                                </div>
+                            </div>
+                            <div class="bar-graph">
+                                <div class="bar-graph-fill"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="volume-info">
+                            <div class="stat-title">成交量</div>
+                            <div class="volume-value">10055亿</div>
+                            <div class="stat-desc">两市共10055亿</div>
+                            <div class="volume-change">
+                                <i class="fas fa-arrow-up"></i> 增量129亿
+                            </div>
+                            <div class="stat-desc">较上日+1%</div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+
+
+                </div>
     </div>
+    
+     
+                
+   
 
     <!-- 引入JavaScript -->
     <script src="assets/js/main.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
