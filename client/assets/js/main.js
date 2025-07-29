@@ -190,6 +190,9 @@ async function fetchAssetData() {
 
         //更新收益显示
         updateTotalProfit(apiResponse.data);
+
+        //更新资产列表
+        updateHoldings(apiResponse.data);
         
         console.log('资产数据更新成功');
         return true;
@@ -277,14 +280,14 @@ function updateTotalReturnPercent(data) {
         
         // 根据正负设置样式
         if (returnValue >= 0) {
-            totalReturnPercent.style.color = "#f1403d";
+            totalReturnPercent.style.color ="#0dbd70";
             returnChange.textContent = "优于大盘";
-            returnChange.style.color = "#f1403d";
+            returnChange.style.color = "#0dbd70";
             returnChange.className = "growth-indicator growth-up";
         } else {
-            totalReturnPercent.style.color = "#0dbd70";
+            totalReturnPercent.style.color = "#f1403d";
             returnChange.textContent = "低于大盘";
-            returnChange.style.color = "#0dbd70";
+            returnChange.style.color = "#f1403d";
             returnChange.className = "growth-indicator growth-down";
         }
         
@@ -331,6 +334,64 @@ function updateTotalProfit(data) {
         }
     }
 }
+
+//更新资产列表
+function updateHoldings(portfolioData) {
+    const holdings = portfolioData.holdings;
+    
+    // 1. 排序 - 按收益率降序
+    const sortedHoldings = [...holdings].sort((a, b) => b.returnPercent - a.returnPercent);
+    
+    // 2. 获取表格tbody元素
+    const tbody = document.querySelector('.assets-table tbody');
+    tbody.innerHTML = ''; // 清空现有内容
+    
+    // 3. 生成新行
+    sortedHoldings.forEach((holding, index) => {
+        const row = document.createElement('tr');
+        
+        // 资产名称
+        const nameCell = document.createElement('td');
+        nameCell.className = 'asset-name';
+        nameCell.textContent = holding.symbol;
+        
+        // 持仓
+        const positionCell = document.createElement('td');
+        positionCell.textContent = holding.quantity;
+        
+        // 涨跌幅
+        const changeCell = document.createElement('td');
+        const isPositive = holding.profit >= 0;
+        changeCell.className = isPositive ? 'positive-change' : 'negative-change';
+        changeCell.textContent = `${isPositive ? '+' : ''}${holding.profit.toFixed(2)}%`;
+        
+        // 排名
+        const returnPercent = document.createElement('td');
+        const percentisPositive = holding.returnPercent >= 0;
+        returnPercent.className = percentisPositive ? 'positive-change' : 'negative-change';
+        returnPercent.textContent = `${percentisPositive ? '+' : ''}${holding.returnPercent.toFixed(2)}%`;
+        
+        
+        // 添加到行
+        row.appendChild(nameCell);
+        row.appendChild(positionCell);
+        row.appendChild(changeCell);
+        row.appendChild(returnPercent);
+        
+        // 添加到表格
+        tbody.appendChild(row);
+    });
+    
+    // 4. 更新现金余额（如果存在）
+    if (portfolioData.cashBalance !== undefined) {
+        const cashSpan = document.querySelector('.cash-balance span');
+        if (cashSpan) {
+            cashSpan.textContent = `现金：${portfolioData.cashBalance}`;
+        }
+    }
+
+}
+
 
 
 // 页面初始化
