@@ -1,6 +1,6 @@
-@ -0,0 +1,201 @@
 /* ===== 主内容区 ===== */
 .main-content {
+    width: 100%;
     flex: 1;
     display: flex;
     flex-direction: column;
