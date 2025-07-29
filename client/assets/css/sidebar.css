@@ -6,6 +6,11 @@
     box-shadow: var(--shadow);
     transition: var(--transition);
     z-index: 100;
+    
+   position: sticky;
+    top: 0;
+    left: 0; /* 确保侧边栏从左侧开始 */
+    height: 100vh; /* 确保侧边栏高度覆盖整个视口 */
 }
 
 .logo-container {
