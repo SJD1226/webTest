@@ -564,7 +564,7 @@ function updateHoldings(portfolioData) {
         const changeCell = document.createElement('td');
         const isPositive = holding.profit >= 0;
         changeCell.className = isPositive ? 'positive-change' : 'negative-change';
-        changeCell.textContent = `${isPositive ? '+' : ''}${holding.profit.toFixed(2)}%`;
+        changeCell.textContent = `${isPositive ? '+' : ''}${holding.profit.toFixed(2)}`;
         
         // 排名
         const returnPercent = document.createElement('td');
