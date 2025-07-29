@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>金融SaaS仪表盘</title>
+    <title>Portfolio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="assets/css/dashboard.css">
     <link rel="stylesheet" href="assets/css/demo.css">
      <link rel="stylesheet" href="assets/css/tmp2.css">
+     <link rel="stylesheet" href="assets/css/news.css">
 </head>
 <body>
     <!-- 侧边导航栏 -->
@@ -63,10 +64,10 @@
         <!-- 顶部导航栏 -->
         <div class="top-nav">
             <div class="nav-left">
-                <div class="brand-logo">投资组合分析</div>
+                <div class="brand-logo">Portfolio Analysis</div>
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="搜索...">
+                    <input type="text" placeholder="searching...">
                 </div>
             </div>
             
@@ -92,6 +93,13 @@
             </div>
         </div>
         
+         <!-- <div class="news-ticker">
+        <div class="ticker-container" id="ticker-content">
+            < 新闻项通过JavaScript动态添加 -->
+        <!-- </div>
+        </div> --> 
+
+
         <!-- 金融数据面板 -->
         <div class="dashboard-container-financial">
             <div class="financial-dashboard">
@@ -131,7 +139,7 @@
                     <div class="chart-container">
                         <div class="chart-title">Assets Distribution</div>
                         <div class="chart-wrapper">
-                            <canvas id="assetChart" width="200" height="150"></canvas>
+                            <canvas  id="assetChart" width="200" height="150"></canvas>
                         </div>
                         
                         <div class="legend">
@@ -139,10 +147,10 @@
                                 <div class="legend-color" style="background-color: #2a5dff;"></div>
                                 <span>Stock 38%</span>
                             </div>
-                            <!-- <div class="legend-item">
+                            <div class="legend-item">
                                 <div class="legend-color" style="background-color: #0dbd70;"></div>
-                                <span>债券 25%</span>
-                            </div> -->
+                                <span>Bond 25%</span>
+                            </div>
                             <div class="legend-item">
                                 <div class="legend-color" style="background-color: #ff6b6b;"></div>
                                 <span>Funds 18%</span>
@@ -160,12 +168,12 @@
                     
                     <!-- 收益率走势图 -->
                     <div class="return-container">
-                        <div class="chart-title">收益率走势对比</div>
+                        <div class="chart-title">Return Trend Comparison</div>
                         
                         <div class="time-filter">
-                            <div class="time-tab">近1月</div>
-                            <div class="time-tab active">近3月</div>
-                            <div class="time-tab">近1年</div>
+                            <div class="time-tab">1M</div>
+                            <div class="time-tab active">3M</div>
+                            <div class="time-tab">1Y</div>
                         </div>
                         
                         <div class="chart-wrapper-large">

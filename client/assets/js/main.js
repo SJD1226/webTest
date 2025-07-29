@@ -36,8 +36,8 @@ function initAssetChart() {
     assetChart = new Chart(assetCtx, {
         type: 'pie',
         data: {
-            labels: ['股票配置', '债券投资', '货币基金', '另类投资', '现金储备'],
-            datasets: [{
+             labels: ['Stock Allocation', 'Bond Investment', 'Money Market Fund', 'Alternative Investment', 'Cash Reserve'],
+             datasets: [{
                 data: [38, 25, 18, 12, 7],
                 backgroundColor: [
                     '#2a5dff', 
@@ -729,7 +729,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- 首次获取数据 (现在所有的数据获取都在这里) ---
     fetchAssetData();           // 获取投资组合、总收益等数据
     fetchAndUpdateRadarChart();   // 获取雷达图数据
-    fetchAssetAllocationData(); // 【关键】获取资产分布饼图数据
+    //fetchAssetAllocationData(); // 【关键】获取资产分布饼图数据
     fetchDailyPerformanceData(); // 【新增】获取每日业绩数据来填充折线图
 
     
@@ -770,3 +770,56 @@ document.addEventListener('DOMContentLoaded', function() {
     // setInterval(fetchAssetAllocationData, 30000);
     // setInterval(fetchAndUpdateRadarChart, 30000);
 });
+
+// 新闻数据
+        const newsData = [
+            {
+                tag: "财经",
+                title: "上证指数突破3400点大关，创年内新高",
+                link: "#"
+            },
+            {
+                tag: "科技",
+                title: "新一代人工智能芯片发布，性能提升300%",
+                link: "#"
+            },
+            {
+                tag: "体育",
+                title: "中国女排成功晋级世界联赛决赛",
+                link: "#"
+            },
+            {
+                tag: "国际",
+                title: "多国领导人出席全球气候峰会",
+                link: "#"
+            },
+            {
+                tag: "娱乐",
+                title: "《失落的宝藏》首映票房突破10亿",
+                link: "#"
+            }
+        ];
+
+        // 初始化滚动条
+        function initNewsTicker() {
+            const tickerContainer = document.getElementById('ticker-content');
+            tickerContainer.innerHTML = ''; // 清空容器
+            
+            // 创建新闻项DOM
+            newsData.forEach(item => {
+                const newsElement = document.createElement('div');
+                newsElement.className = 'ticker-item';
+                newsElement.innerHTML = `
+                    <span class="news-tag">${item.tag}</span>
+                    <a href="${item.link}" target="_blank">${item.title}</a>
+                `;
+                tickerContainer.appendChild(newsElement);
+            });
+            
+            // 克隆内容以创建无缝滚动效果
+            tickerContainer.innerHTML += tickerContainer.innerHTML;
+        }
+
+        // 页面加载完成后执行初始化
+        window.addEventListener('DOMContentLoaded', initNewsTicker);
+   

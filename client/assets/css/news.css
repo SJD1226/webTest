@@ -1,0 +1,74 @@
+/* 新闻滚动条容器 */
+        .news-ticker {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #e74c3c; /* 背景颜色 */
+            color: white;
+            padding: 8px 0;
+            overflow: hidden;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* 新闻滚动内容 */
+        .ticker-container {
+            display: flex;
+            white-space: nowrap;
+            animation: ticker 30s linear infinite;
+            padding: 0 20px;
+        }
+        
+        /* 单条新闻样式 */
+        .ticker-item {
+            display: inline-block;
+            margin-right: 40px; /* 新闻项之间的间距 */
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* 新闻标签样式 */
+        .news-tag {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+            padding: 2px 6px;
+            margin-right: 8px;
+            font-size: 12px;
+        }
+        
+        /* 新闻链接样式 */
+        .ticker-item a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* 动画关键帧 */
+        @keyframes ticker {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+        
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .news-ticker {
+                padding: 6px 0;
+            }
+            .ticker-item {
+                font-size: 12px;
+                margin-right: 30px;
+            }
+            
+            @keyframes ticker {
+                0% {
+                    transform: translateX(50%);
+                }
+                100% {
+                    transform: translateX(-100%);
+                }
+            }
+        }
