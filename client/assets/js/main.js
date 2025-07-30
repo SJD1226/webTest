@@ -848,6 +848,118 @@ document.addEventListener('DOMContentLoaded', function() {
 //             tickerContainer.innerHTML += tickerContainer.innerHTML;
 //         }
 
-//         // 页面加载完成后执行初始化
-//         window.addEventListener('DOMContentLoaded', initNewsTicker);
+        // 页面加载完成后执行初始化
+        window.addEventListener('DOMContentLoaded', initNewsTicker);
+
+        // 简单交互逻辑
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        async function getHoldings() {
+            try {
+                const response = await fetch('http://localhost:3001/api/stocks/market', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify([
+                        { ticker: "AAPL", type: "Common Stock" },
+                        { ticker: "SPY", type: "etf" },
+                        { ticker: "VFIAX", type: "Managed Fund" }
+                    ])
+                });
+                const data = await response.json();
+                console.log('获取的数据:', data);
+                if(data.code === 200) {
+                    renderStocks(data.data);
+                } else {
+                    console.error('API返回错误:', data.message);
+                }
+            } catch (error) {
+                console.error('POST请求失败:', error);
+            }
+        }
+
+        function formatVolume(volume) {
+            // 根据成交量大小转换合适的单位
+            if (volume >= 100000000) {
+                return (volume / 100000000).toFixed(2) + '亿股';
+            } else if (volume >= 10000) {
+                return (volume / 10000).toFixed(2) + '万股';
+            } else {
+                return volume + '股';
+            }
+        }
+
+        function getStockTypeName(type) {
+            // 将股票类型英文转换为中文名称
+            const typeMap = {
+                'Common Stock': '普通股',
+                'ETF': '交易所交易基金',
+                'Managed Fund': '管理基金'
+            };
+            return typeMap[type] || type;
+        }
+
+        function getChineseName(symbol) {
+            // 根据股票代码获取中文名称（示例）
+            const nameMap = {
+                'AAPL': '苹果公司',
+                'SPY': '标普500指数ETF',
+                'VFIAX': '先锋标普500指数基金'
+            };
+            return nameMap[symbol] || symbol;
+        }
+
+        function renderStocks(stocks) {
+            const tbody = document.getElementById('stock-data');
+            tbody.innerHTML = ''; // 清空现有内容
+            
+            stocks.forEach(stock => {
+                const changeClass = stock.deltaIndicator === 'up' ? 'up' : 'down';
+                const sign = stock.deltaIndicator === 'up' ? '+' : '';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="stock-info">
+                            <div class="stock-name">${getChineseName(stock.symbol)}</div>
+                            <div class="stock-code">${stock.symbol}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="stock-price">${stock.lastSalePrice}</div>
+                    </td>
+                    <td>
+                        <div class="stock-change ${changeClass}">
+                            <div class="change-value">${sign}${stock.netChange}</div>
+                            <div class="change-percent">${sign}${stock.percentageChange}%</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="volume">${formatVolume(stock.volume)}</div>
+                    </td>
+                    <td>
+                        <div class="market-cap">${getStockTypeName(stock.stockType)}</div>
+                    </td>
+                    <td>
+                        <div class="ytd-change ${changeClass}">${sign}${stock.percentageChange}%</div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // 页面加载后获取数据
+        document.addEventListener('DOMContentLoaded', getHoldings);
+
    
