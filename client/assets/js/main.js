@@ -658,6 +658,88 @@ async function fetchAssetAllocationData() {
     }
 }
 
+// --- 【升级版】渲染并启动自滚动的全球指数行情栏 ---
+function renderCommonIndexes(indexesData) {
+    const container = document.getElementById('common-indexes-container');
+    if (!container) {
+        console.error("未能找到指数行情栏的容器 #common-indexes-container");
+        return;
+    }
+
+    // 如果数据太少，不足以形成滚动效果，则不启动滚动
+    if (indexesData.length < 5) { // 这个阈值可以根据您的容器宽度调整
+        container.innerHTML = ''; // 清空加载提示
+        indexesData.forEach(index => {
+            const card = document.createElement('div');
+            card.className = 'index-card-dynamic';
+            // ... (省略了和下面重复的innerHTML代码，为了简洁) ...
+            const isPositive = index.changePercentage >= 0;
+            card.innerHTML = `...`; // 正常渲染即可
+            container.appendChild(card);
+        });
+        return; // 直接返回，不执行滚动逻辑
+    }
+
+    // --- 滚动逻辑开始 ---
+    container.innerHTML = ''; // 清空加载提示或旧数据
+
+    // 1. 创建一个包装器，它将应用动画
+    const wrapper = document.createElement('div');
+    wrapper.className = 'scroll-content-wrapper';
+
+    // 2. 将原始数据渲染成卡片，并添加到包装器中
+    indexesData.forEach(index => {
+        const card = document.createElement('div');
+        card.className = 'index-card-dynamic';
+        const isPositive = index.changePercentage >= 0;
+        card.innerHTML = `
+            <div class="index-card-name" title="${index.name}">${index.name}</div>
+            <div class="index-card-price">${index.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+            <div class="index-card-change ${isPositive ? 'positive' : 'negative'}">
+                ${isPositive ? '+' : ''}${index.changePercentage.toFixed(2)}%
+            </div>
+        `;
+        wrapper.appendChild(card);
+    });
+
+    // 3. 克隆所有卡片，实现无缝滚动
+    //    我们将wrapper的全部内容作为字符串复制，然后追加回去，这是最高效的克隆方式
+    wrapper.innerHTML += wrapper.innerHTML;
+
+    // 4. 将包含原始卡片和克隆卡片的包装器添加到主容器中
+    container.appendChild(wrapper);
+
+    // 5. (可选) 动态调整动画时长，让速度更合理
+    const totalWidth = wrapper.scrollWidth / 2; // 单组卡片的总宽度
+    const duration = totalWidth / 50; // 假设每秒滚动50像素
+    wrapper.style.animationDuration = `${duration}s`;
+}
+
+// --- 【新增】从API获取全球指数数据 ---
+async function fetchCommonIndexesData() {
+    try {
+        const response = await fetch('http://localhost:3001/api/indexes/common-indexes');
+        if (!response.ok) {
+            throw new Error(`HTTP错误! 状态码: ${response.status}`);
+        }
+        const apiResponse = await response.json();
+
+        if (apiResponse.code !== 200 || !apiResponse.data) {
+            throw new Error('API返回数据格式错误或状态码非200');
+        }
+
+        // 调用渲染函数来显示数据
+        renderCommonIndexes(apiResponse.data);
+
+    } catch (error) {
+        console.error('获取全球指数数据失败:', error);
+        const container = document.getElementById('common-indexes-container');
+        if(container) {
+            container.innerHTML = `<div class="loading-placeholder error">Failed to load market data.</div>`;
+        }
+    }
+}
+
 // 辅助函数：更新资产分布图的图例
 function updateAssetChartLegend(data) {
     const legendContainer = document.querySelector('.chart-container .legend');
@@ -757,6 +839,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchAndUpdateRadarChart();   // 获取雷达图数据
     //fetchAssetAllocationData(); // 【关键】获取资产分布饼图数据
     fetchDailyPerformanceData(); // 【新增】获取每日业绩数据来填充折线图
+    fetchCommonIndexesData(); // 【在这里添加新的函数调用】
 
     
     // --- 其他交互逻辑 (来自您的第二个监听器) ---

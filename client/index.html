@@ -459,9 +459,9 @@
     
                 <div class="dashboard-section">
 
-<h2 class="section-title">市场行情分析</h2>
+<!-- <h2 class="section-title">市场行情分析</h2> -->
                 
-                <div class="header">
+                <!-- <div class="header">
                     <div class="tabs">
                         <div class="tab-item active">今日行情</div>
                     </div>
@@ -506,9 +506,24 @@
                             <span>-0.37%</span>
                         </div>
                     </div>
+                </div> -->
+                <!-- 【新的】全球指数行情栏 -->
+                <div class="dashboard-section">
+                    <h2 class="section-title">Global Market Indexes</h2>
+                    
+                    <!-- 这个 div 将作为可水平滚动的容器 -->
+                    <div id="common-indexes-container" class="horizontal-scroll-container">
+                        <!-- 指数卡片将由 JavaScript 动态填充到这里 -->
+                        <div class="loading-placeholder">Loading market data...</div>
+                    </div>
+
+                    <!-- 您可以保留“市场总览”部分，如果需要的话，或者也删除它 -->
+                    <div class="market-overview">
+                        <!-- ... 市场总览的现有内容 ... -->
+                    </div>
                 </div>
                 
-                <div class="market-overview">
+                <!-- <div class="market-overview">
                     <div class="market-overview-title">
                         <i class="fas fa-chart-pie"></i> 市场总览
                     </div>
@@ -553,17 +568,13 @@
                             <div class="stat-desc">较上日+1%</div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 </div>
 
 
 
-                </div>
     </div>
-    
-     
-                
-   
+    </div>
 
     <!-- 引入JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
