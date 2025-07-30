@@ -324,6 +324,9 @@ async function fetchDailyPerformanceData() {
         
         // 将获取到的真实数据存储在全局变量中
         monthlyPerformanceData = apiResponse.data;
+        // 渲染日历数据
+        
+        renderCalendarPerformance(monthlyPerformanceData, 2025, 7);
 
         // 数据加载成功后，默认更新一次图表（根据默认选中的tab）
         const activeTab = document.querySelector('.return-container .time-tab.active');
@@ -342,6 +345,80 @@ async function fetchDailyPerformanceData() {
         updateReturnChart('3m');
     }
 }
+
+// 日历数据渲染
+// 日历数据渲染 - 修正字段名问题
+function renderCalendarPerformance(data, year, month) {    
+    console.log("渲染日历数据:", data);
+    const calendarGrid = document.getElementById('calendarGrid');
+    
+    // 清空日历容器（重要！）
+    calendarGrid.innerHTML = '';
+    
+    // 修正字段名：使用 dailyProfitLoss 而不是 profit
+    const profitMap = {};
+    data.forEach(entry => {
+        const date = new Date(entry.date);
+        const day = date.getDate(); // 得到“几号”
+        profitMap[day] = entry.dailyProfitLoss; // 修正这里！！！
+    });
+
+    const firstDayOfMonth = new Date(year, month - 1, 1); // month 从 0 开始
+    const totalDays = new Date(year, month, 0).getDate(); // 当前月总天数
+    const startWeekDay = firstDayOfMonth.getDay(); // 星期几开始（0=周日）
+    const totalCells = Math.ceil((startWeekDay + totalDays) / 7) * 7;
+
+    for (let i = 0; i < totalCells; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'day-cell';
+
+        const dayNumber = i - startWeekDay + 1;
+        if (dayNumber > 0 && dayNumber <= totalDays) {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'day-number';
+            dayDiv.textContent = dayNumber;
+            cell.appendChild(dayDiv);
+
+            // 获取收益值（注意字段名修正）
+            const profit = profitMap[dayNumber];
+            
+            // 仅在收益存在时显示
+            if (profit !== undefined) {
+                const earningDiv = document.createElement('div');
+                earningDiv.classList.add('day-earning');
+
+                // 格式化收益显示
+                if (profit > 0) {
+                    earningDiv.classList.add('positive-earning');
+                    earningDiv.textContent = `+${profit.toFixed(2)}`;
+                } else if (profit < 0) {
+                    earningDiv.classList.add('negative-earning');
+                    earningDiv.textContent = `${profit.toFixed(2)}`;
+                } else {
+                    earningDiv.textContent = `0.00`;
+                }
+                cell.appendChild(earningDiv);
+            }
+
+            // 高亮今天
+            const today = new Date();
+            if (
+                dayNumber === today.getDate() &&
+                month === today.getMonth() + 1 &&
+                year === today.getFullYear()
+            ) {
+                cell.classList.add('today-cell');
+                const todayText = document.createElement('div');
+                todayText.className = 'today-text';
+                todayText.textContent = '今';
+                cell.appendChild(todayText);
+            }
+        }
+
+        calendarGrid.appendChild(cell);
+    }
+}
+
 
 
 // 初始化刷新按钮交互

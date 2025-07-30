@@ -224,6 +224,12 @@
     gap: 10px;
 }
 
+.weekdays-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 创建7等宽列 */
+    gap: 8px; /* 与日历网格相同的间距 */
+}
+
 .arrow-btn {
     width: 36px;
     height: 36px;
