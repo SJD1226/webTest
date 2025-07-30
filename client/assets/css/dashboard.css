@@ -210,3 +210,98 @@
         gap: 10px;
     }
 }
+
+/* --- 新增样式：用于水平滚动的指数行情栏 --- */
+
+/* 滚动的父容器 */
+.horizontal-scroll-container {
+    display: flex;         /* 让子元素横向排列 */
+    overflow: hidden;      /* 【重要】从 auto 改为 hidden，隐藏滚动条，由动画控制滚动 */
+    padding: 10px 0;       /* 调整内边距，因为不再需要为滚动条留空间 */
+    width: 100%;           /* 确保容器占满父元素宽度 */
+}
+
+/* 包含原始卡片和克隆卡片的直接子容器 */
+.scroll-content-wrapper {
+    display: flex;
+    /* 应用我们定义的滚动动画 */
+    animation: horizontal-scroll 40s linear infinite; 
+    /* 动画时长40秒，可根据卡片数量和期望速度调整 */
+}
+
+/* 当鼠标悬停在整个行情栏上时，暂停动画 */
+.horizontal-scroll-container:hover .scroll-content-wrapper {
+    animation-play-state: paused;
+}
+
+/* 滚动动画的关键帧 */
+@keyframes horizontal-scroll {
+    0% {
+        transform: translateX(0); /* 动画开始时，位置在最左边 */
+    }
+    100% {
+        transform: translateX(-50%); /* 动画结束时，正好滚动完所有原始卡片，到达克隆卡片的起点 */
+    }
+}
+/* 动态生成的指数卡片样式 */
+.index-card-dynamic {
+    flex: 0 0 220px; /* 重要：不缩放、不拉伸、固定基础宽度为220px */
+    margin-right: 16px;   /* 卡片之间的间距 */
+    padding: 18px;
+    background-color: var(--white);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease-in-out;
+}
+
+.index-card-dynamic:hover {
+    transform: translateY(-5px);
+}
+
+.index-card-dynamic:last-child {
+    margin-right: 0; /* 最后一个卡片不需要右边距 */
+}
+
+/* 卡片内部元素的样式 */
+.index-card-name {
+    font-size: 14px;
+    color: #888;
+    white-space: nowrap;      /* 防止长名称换行 */
+    overflow: hidden;         /* 超出部分隐藏 */
+    text-overflow: ellipsis;  /* 超出部分显示省略号 */
+}
+
+.index-card-price {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 10px 0;
+}
+
+.index-card-change {
+    font-size: 16px;
+    font-weight: 500;
+    align-self: flex-start; /* 让它靠左对齐 */
+    padding: 4px 8px;
+    border-radius: 7px;
+}
+
+/* 根据涨跌应用不同颜色 */
+.index-card-change.positive {
+    color: #0dbd70;
+    background-color: rgba(13, 189, 112, 0.1);
+}
+
+.index-card-change.negative {
+    color: #f1403d;
+    background-color: rgba(241, 64, 61, 0.1);
+}
+
+/* 加载占位符样式 */
+.loading-placeholder {
+    color: #999;
+    font-style: italic;
+}
