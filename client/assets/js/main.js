@@ -77,7 +77,7 @@ function initReturnChart() {
             labels: [], // 初始标签为空
             datasets: [
                 {
-                    label: '投资组合',
+                    label: 'My Assets',
                     data: [], // 初始数据为空
                     borderColor: '#2a5dff',
                     tension: 0.3,
@@ -86,7 +86,7 @@ function initReturnChart() {
                     pointBorderWidth: 2
                 },
                 {
-                    label: '沪深300', // 您可以根据实际的基准指数修改
+                    label: 'S & P 500', // 您可以根据实际的基准指数修改
                     data: [], // 初始数据为空
                     borderColor: '#ff6b6b',
                     tension: 0.3,
@@ -146,56 +146,62 @@ function initReturnChart() {
     });
 }
 
-// --- 【全新升级版】随机数据生成器 ---
-// 生成更真实、波动性更强、更不规则的业绩数据
-function generateRandomPerformanceData(days) {
+// --- 【新增】带种子的随机数生成器 ---
+// 这个函数接收一个数字（种子），并返回一个新的、可预测的随机数函数。
+function createSeededRandom(seed) {
+    let a = seed;
+    // 返回一个函数，其行为类似 Math.random()，但结果是可预测的
+    return function() {
+        // 这是一种常见的、简单的PRNG算法 (Mulberry32)
+        a += 0x6D2B79F5;
+        let t = a;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    }
+}
+
+// --- 【全新升级版】可复现的随机数据生成器 ---
+function generateRandomPerformanceData(days, seed) { // 【修改】新增了 seed 参数
     const data = [];
     let cumulativePortfolioReturn = 0;
     let cumulativeBenchmarkReturn = 0;
 
-    // --- 模拟参数设定 (可调整以改变行为) ---
-    const marketYearlyReturn = 0.08;      // 假设市场年化回报率为 8%
-    const marketYearlyVolatility = 0.20;  // 假设市场年化波动率为 20% (波动更大)
-    
-    // 将年化数据转换为日化数据 (一年约252个交易日)
+    // --- 【修改】使用我们的种子创建可预测的随机函数 ---
+    const random = createSeededRandom(seed);
+
+    // --- 模拟参数设定 (无修改) ---
+    const marketYearlyReturn = 0.08;
+    const marketYearlyVolatility = 0.20;
     const marketDailyDrift = marketYearlyReturn / 252;
     const marketDailyVolatility = marketYearlyVolatility / Math.sqrt(252);
-
-    // --- 投资组合特定参数 ---
-    const portfolioBeta = 1.1; // 组合Beta为1.1，意味着它比市场波动性高10%
-    const portfolioAlphaDrift = 0.0001; // 组合的Alpha漂移，代表每天有0.01%的微小超额收益趋势
-    const portfolioAlphaVolatility = 0.008; // 组合的Alpha波动率，这是组合独特的、非系统性的风险
+    const portfolioBeta = 1.1;
+    const portfolioAlphaDrift = 0.0001;
+    const portfolioAlphaVolatility = 0.008;
 
     for (let i = 0; i < days; i++) {
-        // 1. 生成基准指数的随机日回报
-        // 使用多个随机数相加来更好地模拟正态分布
-        const benchmarkRandomComponent = (Math.random() + Math.random() + Math.random() - 1.5);
+        // --- 【修改】将所有的 Math.random() 替换为我们自己的 random() ---
+        const benchmarkRandomComponent = (random() + random() + random() - 1.5);
         let benchmarkDailyChange = marketDailyDrift + benchmarkRandomComponent * marketDailyVolatility;
 
-        // 2. 生成投资组合的日回报
-        // 它由两部分组成：跟随市场的Beta部分 + 自身独特的Alpha部分
-        const portfolioRandomComponent = (Math.random() - 0.5) * 2;
+        const portfolioRandomComponent = (random() - 0.5) * 2;
         const alphaComponent = portfolioAlphaDrift + portfolioRandomComponent * portfolioAlphaVolatility;
-        const betaComponent = portfolioBeta * (benchmarkDailyChange - marketDailyDrift); // Beta应作用于市场的超额漂移部分
+        const betaComponent = portfolioBeta * (benchmarkDailyChange - marketDailyDrift);
         let portfolioDailyChange = marketDailyDrift + betaComponent + alphaComponent;
 
-        // 3. 以小概率引入“随机冲击事件”来制造剧烈波动
-        if (Math.random() < 0.03) { // 每天有 3% 的概率发生冲击事件
-            const shockMultiplier = (Math.random() > 0.5 ? 1 : -1) * (2 + Math.random() * 2); // 冲击可以是2到4倍的涨或跌
-            
-            if (Math.random() > 0.5) { // 冲击可能只影响组合（例如个股财报）
+        if (random() < 0.03) { // 【修改】
+            const shockMultiplier = (random() > 0.5 ? 1 : -1) * (2 + random() * 2); // 【修改】
+            if (random() > 0.5) { // 【修改】
                  portfolioDailyChange *= shockMultiplier;
-            } else { // 或者影响整个市场
+            } else {
                  portfolioDailyChange *= shockMultiplier;
-                 benchmarkDailyChange *= shockMultiplier * 0.8; // 市场也受影响，但可能幅度略小
+                 benchmarkDailyChange *= shockMultiplier * 0.8;
             }
         }
 
-        // 4. 累加每日回报（并转换为百分比）
         cumulativePortfolioReturn += portfolioDailyChange * 100;
         cumulativeBenchmarkReturn += benchmarkDailyChange * 100;
 
-        // 5. 生成日期标签
         const date = new Date();
         date.setDate(date.getDate() - (days - 1 - i));
         
@@ -208,26 +214,45 @@ function generateRandomPerformanceData(days) {
     return data;
 }
 
-// --- 新增函数 ---
-// 统一更新收益率走势图的逻辑
+
+// --- 【修正版】统一更新收益率走势图的逻辑 ---
 function updateReturnChart(timeframe) {
     let performanceData;
 
     switch (timeframe) {
         case '1m':
             if (monthlyPerformanceData) {
-                performanceData = monthlyPerformanceData;
+                // --- 主要修正开始 ---
+                // 我们需要将API返回的每日数据转换为累积数据
+                let cumulativePortfolio = 0;
+                let cumulativeBenchmark = 0;
+                
+                performanceData = monthlyPerformanceData.map(dailyData => {
+                    cumulativePortfolio += dailyData.dailyReturnPercentage;
+                    cumulativeBenchmark += dailyData.benchmarkReturnPercentage;
+                    
+                    // 返回一个新的对象，包含累积值
+                    return {
+                        date: dailyData.date,
+                        // 使用新的属性名，以便和下面的提取代码保持一致
+                        dailyReturnPercentage: cumulativePortfolio, 
+                        benchmarkReturnPercentage: cumulativeBenchmark
+                    };
+                });
+                // --- 主要修正结束 ---
+
             } else {
                 console.log("正在加载近1月数据...");
-                // 如果数据还没加载好，可以显示一个加载动画或暂时不更新
                 return;
             }
             break;
         case '3m':
-            performanceData = generateRandomPerformanceData(90); // 生成90天模拟数据
+            // 【修改】调用生成器时，提供一个固定的种子 (例如 12345)
+            performanceData = generateRandomPerformanceData(90, 12345); 
             break;
         case '1y':
-            performanceData = generateRandomPerformanceData(365); // 生成365天模拟数据
+            // 【修改】为1年数据提供一个不同的固定种子 (例如 54321)
+            performanceData = generateRandomPerformanceData(365, 54321); 
             break;
         default:
             return;
@@ -235,10 +260,11 @@ function updateReturnChart(timeframe) {
     
     // 从数据中提取标签和数据集
     const labels = performanceData.map(item => {
-        // 格式化日期，例如 "07-29"
         const date = new Date(item.date);
         return `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     });
+
+    // 这里的 item.dailyReturnPercentage 现在已经是累积值了
     const portfolioReturns = performanceData.map(item => item.dailyReturnPercentage);
     const benchmarkReturns = performanceData.map(item => item.benchmarkReturnPercentage);
 
@@ -247,7 +273,7 @@ function updateReturnChart(timeframe) {
         returnChart.data.labels = labels;
         returnChart.data.datasets[0].data = portfolioReturns;
         returnChart.data.datasets[1].data = benchmarkReturns;
-        // 根据数据点数量调整是否显示点
+        
         const showPoints = timeframe === '1m';
         returnChart.data.datasets.forEach(dataset => {
             dataset.pointRadius = showPoints ? 3 : 0;
@@ -269,11 +295,11 @@ function initTimeFilterInteraction() {
             
             // 根据点击的按钮调用图表更新函数
             const timeframeText = this.textContent;
-            if (timeframeText === '近1月') {
+            if (timeframeText === 'Past month') {
                 updateReturnChart('1m');
-            } else if (timeframeText === '近3月') {
+            } else if (timeframeText === 'Past three months') {
                 updateReturnChart('3m');
-            } else if (timeframeText === '近1年') {
+            } else if (timeframeText === 'Past year') {
                 updateReturnChart('1y');
             }
         });
@@ -303,15 +329,15 @@ async function fetchDailyPerformanceData() {
         const activeTab = document.querySelector('.return-container .time-tab.active');
         if (activeTab) {
             const timeframeText = activeTab.textContent;
-            if (timeframeText === '近1月') updateReturnChart('1m');
-            else if (timeframeText === '近3月') updateReturnChart('3m');
-            else if (timeframeText === '近1年') updateReturnChart('1y');
+            if (timeframeText === 'Past month') updateReturnChart('1m');
+            else if (timeframeText === 'Past three months') updateReturnChart('3m');
+            else if (timeframeText === 'Past year') updateReturnChart('1y');
         } else {
              updateReturnChart('3m'); // 如果没有active的tab，默认显示3个月
         }
 
     } catch (error) {
-        console.error('获取每日业绩数据失败:', error);
+        console.error('Fail to fetch the daily performance:', error);
         // 如果API失败，可以依然显示模拟数据
         updateReturnChart('3m');
     }
@@ -771,54 +797,54 @@ document.addEventListener('DOMContentLoaded', function() {
     // setInterval(fetchAndUpdateRadarChart, 30000);
 });
 
-// 新闻数据
-        const newsData = [
-            {
-                tag: "财经",
-                title: "上证指数突破3400点大关，创年内新高",
-                link: "#"
-            },
-            {
-                tag: "科技",
-                title: "新一代人工智能芯片发布，性能提升300%",
-                link: "#"
-            },
-            {
-                tag: "体育",
-                title: "中国女排成功晋级世界联赛决赛",
-                link: "#"
-            },
-            {
-                tag: "国际",
-                title: "多国领导人出席全球气候峰会",
-                link: "#"
-            },
-            {
-                tag: "娱乐",
-                title: "《失落的宝藏》首映票房突破10亿",
-                link: "#"
-            }
-        ];
+// // 新闻数据
+//         const newsData = [
+//             {
+//                 tag: "财经",
+//                 title: "上证指数突破3400点大关，创年内新高",
+//                 link: "#"
+//             },
+//             {
+//                 tag: "科技",
+//                 title: "新一代人工智能芯片发布，性能提升300%",
+//                 link: "#"
+//             },
+//             {
+//                 tag: "体育",
+//                 title: "中国女排成功晋级世界联赛决赛",
+//                 link: "#"
+//             },
+//             {
+//                 tag: "国际",
+//                 title: "多国领导人出席全球气候峰会",
+//                 link: "#"
+//             },
+//             {
+//                 tag: "娱乐",
+//                 title: "《失落的宝藏》首映票房突破10亿",
+//                 link: "#"
+//             }
+//         ];
 
-        // 初始化滚动条
-        function initNewsTicker() {
-            const tickerContainer = document.getElementById('ticker-content');
-            tickerContainer.innerHTML = ''; // 清空容器
+//         // 初始化滚动条
+//         function initNewsTicker() {
+//             const tickerContainer = document.getElementById('ticker-content');
+//             tickerContainer.innerHTML = ''; // 清空容器
             
-            // 创建新闻项DOM
-            newsData.forEach(item => {
-                const newsElement = document.createElement('div');
-                newsElement.className = 'ticker-item';
-                newsElement.innerHTML = `
-                    <span class="news-tag">${item.tag}</span>
-                    <a href="${item.link}" target="_blank">${item.title}</a>
-                `;
-                tickerContainer.appendChild(newsElement);
-            });
+//             // 创建新闻项DOM
+//             newsData.forEach(item => {
+//                 const newsElement = document.createElement('div');
+//                 newsElement.className = 'ticker-item';
+//                 newsElement.innerHTML = `
+//                     <span class="news-tag">${item.tag}</span>
+//                     <a href="${item.link}" target="_blank">${item.title}</a>
+//                 `;
+//                 tickerContainer.appendChild(newsElement);
+//             });
             
-            // 克隆内容以创建无缝滚动效果
-            tickerContainer.innerHTML += tickerContainer.innerHTML;
-        }
+//             // 克隆内容以创建无缝滚动效果
+//             tickerContainer.innerHTML += tickerContainer.innerHTML;
+//         }
 
         // 页面加载完成后执行初始化
         window.addEventListener('DOMContentLoaded', initNewsTicker);
@@ -933,4 +959,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // 页面加载后获取数据
         document.addEventListener('DOMContentLoaded', getHoldings);
+
    
