@@ -771,55 +771,55 @@ document.addEventListener('DOMContentLoaded', function() {
     // setInterval(fetchAndUpdateRadarChart, 30000);
 });
 
-// 新闻数据
-        const newsData = [
-            {
-                tag: "财经",
-                title: "上证指数突破3400点大关，创年内新高",
-                link: "#"
-            },
-            {
-                tag: "科技",
-                title: "新一代人工智能芯片发布，性能提升300%",
-                link: "#"
-            },
-            {
-                tag: "体育",
-                title: "中国女排成功晋级世界联赛决赛",
-                link: "#"
-            },
-            {
-                tag: "国际",
-                title: "多国领导人出席全球气候峰会",
-                link: "#"
-            },
-            {
-                tag: "娱乐",
-                title: "《失落的宝藏》首映票房突破10亿",
-                link: "#"
-            }
-        ];
+// // 新闻数据
+//         const newsData = [
+//             {
+//                 tag: "财经",
+//                 title: "上证指数突破3400点大关，创年内新高",
+//                 link: "#"
+//             },
+//             {
+//                 tag: "科技",
+//                 title: "新一代人工智能芯片发布，性能提升300%",
+//                 link: "#"
+//             },
+//             {
+//                 tag: "体育",
+//                 title: "中国女排成功晋级世界联赛决赛",
+//                 link: "#"
+//             },
+//             {
+//                 tag: "国际",
+//                 title: "多国领导人出席全球气候峰会",
+//                 link: "#"
+//             },
+//             {
+//                 tag: "娱乐",
+//                 title: "《失落的宝藏》首映票房突破10亿",
+//                 link: "#"
+//             }
+//         ];
 
-        // 初始化滚动条
-        function initNewsTicker() {
-            const tickerContainer = document.getElementById('ticker-content');
-            tickerContainer.innerHTML = ''; // 清空容器
+//         // 初始化滚动条
+//         function initNewsTicker() {
+//             const tickerContainer = document.getElementById('ticker-content');
+//             tickerContainer.innerHTML = ''; // 清空容器
             
-            // 创建新闻项DOM
-            newsData.forEach(item => {
-                const newsElement = document.createElement('div');
-                newsElement.className = 'ticker-item';
-                newsElement.innerHTML = `
-                    <span class="news-tag">${item.tag}</span>
-                    <a href="${item.link}" target="_blank">${item.title}</a>
-                `;
-                tickerContainer.appendChild(newsElement);
-            });
+//             // 创建新闻项DOM
+//             newsData.forEach(item => {
+//                 const newsElement = document.createElement('div');
+//                 newsElement.className = 'ticker-item';
+//                 newsElement.innerHTML = `
+//                     <span class="news-tag">${item.tag}</span>
+//                     <a href="${item.link}" target="_blank">${item.title}</a>
+//                 `;
+//                 tickerContainer.appendChild(newsElement);
+//             });
             
-            // 克隆内容以创建无缝滚动效果
-            tickerContainer.innerHTML += tickerContainer.innerHTML;
-        }
+//             // 克隆内容以创建无缝滚动效果
+//             tickerContainer.innerHTML += tickerContainer.innerHTML;
+//         }
 
-        // 页面加载完成后执行初始化
-        window.addEventListener('DOMContentLoaded', initNewsTicker);
+//         // 页面加载完成后执行初始化
+//         window.addEventListener('DOMContentLoaded', initNewsTicker);
    
