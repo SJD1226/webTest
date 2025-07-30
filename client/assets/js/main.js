@@ -849,7 +849,7 @@ document.addEventListener('DOMContentLoaded', function() {
 //         }
 
         // 页面加载完成后执行初始化
-        window.addEventListener('DOMContentLoaded', initNewsTicker);
+        //window.addEventListener('DOMContentLoaded', initNewsTicker);
 
         // 简单交互逻辑
         document.querySelectorAll('.tab').forEach(tab => {
