@@ -795,7 +795,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // setInterval(fetchAssetData, 30000);
     // setInterval(fetchAssetAllocationData, 30000);
     // setInterval(fetchAndUpdateRadarChart, 30000);
+    
 });
+
 
 // // 新闻数据
 //         const newsData = [
