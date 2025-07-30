@@ -49,15 +49,8 @@
                 </div>
             </div>
         </div>
-        
-         <!-- <div class="news-ticker">
-        <div class="ticker-container" id="ticker-content">
-            < 新闻项通过JavaScript动态添加 -->
-        <!-- </div>
-        </div> --> 
 
-
-        <!-- 金融数据面板 -->
+        <!-- 区域一 -->
         <div class="dashboard-container-financial">
             <div class="financial-dashboard">
                 
@@ -151,284 +144,96 @@
                 </div>
             </div>
         </div>
-        <!-- 集成金融数据面板 -->
-            <div class="dashboard-container">
-                <!-- 左列：收益分布 -->
-                <div class="dashboard-section">
-                    <!-- 收益分布面板内容 -->
-                      <!-- 收益分布 -->
+        <!-- 区域二 -->
+        <div class="dashboard-container">
             <div class="panel">
                 <div class="panel-title">Profit Distribution</div>
-                
-                <div class="time-tabs">
-                    <div class="time-tab">day</div>
-                    <div class="time-tab">week</div>
-                    <div class="time-tab active">month</div>
-                    <div class="time-tab">year</div>
-                </div>
-                
-                <div class="continuous-earnings">
-                    <span class="continuous-earnings-text">Continuous positive profit</span>
-                    <div class="show-earnings">晒收益</div>
-                </div>
-
-                
                 <!-- 日历面板 -->
-                <div class="calendar-container">
-    <div class="calendar-header">
-        <div class="calendar-title">2025.7</div>
-        <div class="calendar-arrows">
-            <div class="arrow-btn"><i class="fas fa-chevron-left"></i></div>
-            <div class="arrow-btn"><i class="fas fa-chevron-right"></i></div>
-        </div>
-    </div>
-    
-    <!-- 星期标题 -->
-    <div class="calendar-grid">
-        <div class="day-header">一</div>
-        <div class="day-header">二</div>
-        <div class="day-header">三</div>
-        <div class="day-header">四</div>
-        <div class="day-header">五</div>
-        <div class="day-header">六</div>
-        <div class="day-header">日</div>
-    </div>
-    
-    <!-- 日历内容容器 -->
-    <div id="calendarGrid" class="calendar-grid"></div>
-</div>
-                
-                <!-- <div class="calendar-header">
-                    <div class="calendar-title">2025.7</div>
-                    <div class="calendar-arrows">
-                        <div class="arrow-btn"><i class="fas fa-chevron-left"></i></div>
-                        <div class="arrow-btn"><i class="fas fa-chevron-right"></i></div>
-                    </div>
+            <div class="calendar-container" style="width: 700px;  border: none;">
+            <div class="calendar-header">
+                <div class="calendar-title">2025.7</div>
+                <div class="calendar-arrows">
+                    <div class="arrow-btn"><i class="fas fa-chevron-left"></i></div>
+                    <div class="arrow-btn"><i class="fas fa-chevron-right"></i></div>
                 </div>
-                
-                <div class="calendar-grid">
-                    <div class="day-header">一</div>
-                    <div class="day-header">二</div>
-                    <div class="day-header">三</div>
-                    <div class="day-header">四</div>
-                    <div class="day-header">五</div>
-                    <div class="day-header">六</div>
-                    <div class="day-header">日</div>
-                    <div class="calendar-grid" id="calendarGrid"></div> -->
-                    
-                    <!-- 日历内容 -->
-                    <!-- <div class="day-cell"></div>
-                    <div class="day-cell"></div>
-                    <div class="day-cell"></div>
-                    <div class="day-cell"></div> -->
-                    
+            </div>
+            
+            <!-- 星期标题 -->
+            <div class="calendar-grid">
+                <div class="day-header">一</div>
+                <div class="day-header">二</div>
+                <div class="day-header">三</div>
+                <div class="day-header">四</div>
+                <div class="day-header">五</div>
+                <div class="day-header">六</div>
+                <div class="day-header">日</div>
+            </div>
+            
+            <!-- 日历内容容器 -->
+            <div id="calendarGrid" class="calendar-grid"></div>
+           </div>
 
-                    <!-- <div class="day-cell">
-                        <div class="day-number">1</div>
-                        <div class="day-earning positive-earning">+0.53</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">2</div>
-                        <div class="day-earning negative-earning">-39.08</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">3</div>
-                        <div class="day-earning positive-earning">+379.24</div>
+        <!-- 中列：雷达图和资产列表 -->
+            
+        </div>
+        <div class="dashboard-section">
+                <!-- 雷达图面板内容 -->
+                        <!-- 资产列表面板内容 -->
+                        
+                <!-- 雷达图 -->
+                <div class="panel">
+                    <div class="panel-title">Radar Chart</div>
+                    
+                    <div class="chart-wrapper">
+                        <canvas id="radarChart"></canvas>
                     </div>
                     
-                    <div class="day-cell">
-                        <div class="day-number">4</div>
-                        <div class="day-earning negative-earning">-180.91</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">5</div>
-                        <div class="day-earning positive-earning">+31.99</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">6</div>
-                        <div class="day-earning positive-earning">+265.90</div>
-                    </div>
-                    <div class="day-cell"></div>
-                    <div class="day-cell"></div>
-                    <div class="day-cell"></div>
-                    
-                    <div class="day-cell"></div>
-                    <div class="day-cell"></div>
-                    <div class="day-cell">
-                        <div class="day-number">13</div>
-                        <div class="day-earning positive-earning">+0.96</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">14</div>
-                        <div class="day-earning positive-earning">+229.12</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">15</div>
-                        <div class="day-earning positive-earning">+282.35</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">16</div>
-                        <div class="day-earning positive-earning">+95.37</div>
-                    </div>
-                    
-                    <div class="day-cell">
-                        <div class="day-number">17</div>
-                        <div class="day-earning positive-earning">+334.75</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">18</div>
-                        <div class="day-earning positive-earning">+320.92</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">19</div>
-                        <div class="day-earning">0.00</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">20</div>
-                        <div class="day-earning">0.00</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">21</div>
-                        <div class="day-earning positive-earning">+120.88</div>
-                    </div>
-                    <div class="day-cell"></div>
-                    
-                    <div class="day-cell"></div>
-                    <div class="day-cell">
-                        <div class="day-number">22</div>
-                        <div class="day-earning negative-earning">-1.72</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">23</div>
-                        <div class="day-earning positive-earning">+248.44</div>
-                    </div>
-                    <div class="day-cell today-cell">
-                        <div class="day-number">24</div>
-                        <div class="day-earning positive-earning">+198.07</div>
-                        <div class="today-text">今</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">25</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">26</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">27</div>
-                        <div class="day-earning positive-earning">+1.05</div>
-                    </div>
-                    
-                    <div class="day-cell">
-                        <div class="day-number">28</div>
-                        <div class="day-earning positive-earning">+0.96</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">29</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">30</div>
-                    </div>
-                    <div class="day-cell">
-                        <div class="day-number">31</div>
-                    </div>
-                    <div class="day-cell"></div>
-                    <div class="day-cell"></div>
-                </div> -->
-                
-                <!-- <div class="update-notice">Update</div>
-            </div>
-                </div> -->
-                
-                <!-- 中列：雷达图和资产列表 -->
-                <div class="dashboard-section">
-                    <!-- 雷达图面板内容 -->
-                    <!-- 资产列表面板内容 -->
-                       
-            <!-- 雷达图 -->
-            <div class="panel">
-                <div class="panel-title">Radar Chart</div>
-                
-                <div class="chart-wrapper">
-                    <canvas id="radarChart"></canvas>
                 </div>
                 
-                <!-- <div class="radar-labels">
-                    <span>DiscountedCashFlowScore</span>
-                    <span>ReturnOnAssetsScore</span>
-                    <span>DebtToEquityScore</span>
-                    <span>PriceToEarningsScore</span>
-                    <span>PriceToBookScore</span>
-                </div> -->
-            </div>
+                <!-- 资产列表 -->
+                <div class="panel">
+                    <div class="panel-title">
+                        <span>assets list</span>
             
-            <!-- 资产列表 -->
-            <div class="panel">
-                <div class="panel-title">
-                    <span>assets list</span>
+                    </div>
+                    <div class="table-con">
+                    <table class="assets-table">
+                        <thead>
+                            <tr>
+                                <th>name</th>
+                                <th>quantity</th>
+                                <th>profit</th>
+                                <th>return percent</th>
+                            </tr>
+                        </thead>
         
+                
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                    </div>
+                
+                
+                
+                    <!-- <div class="cash-balance">
+                        <i class="fas fa-money-bill-wave cash-icon"></i>
+                        <span>现金：20000</span>
+                    </div> -->
                 </div>
-                <div class="table-con">
-                <table class="assets-table">
-                    <thead>
-                        <tr>
-                            <th>name</th>
-                            <th>quantity</th>
-                            <th>profit</th>
-                            <th>return percent</th>
-                        </tr>
-                    </thead>
-    
-            
-                    <tbody>
-                        <!-- <tr>
-                            <td class="asset-name">股票A</td>
-                            <td>10000</td>
-                            <td class="positive-change">+3.2%</td>
-                            <td><div class="rank">1</div></td>
-                        </tr>
-                        <tr>
-                            <td class="asset-name">股票B</td>
-                            <td>8000</td>
-                            <td class="profit">+2.7%</td>
-                            <td class="return-percent">2</td>
-                        </tr>
-                        <tr>
-                            <td class="asset-name">债券C</td>
-                            <td>8000</td>
-                            <td class="positive-change">+2.8%</td>
-                            <td><div class="rank">1</div></td>
-                        </tr>
-                        <tr>
-                            <td class="asset-name">基金D</td>
-                            <td>8000</td>
-                            <td class="positive-change">+2.7%</td>
-                            <td><div class="rank">2</div></td>
-                        </tr> -->
-                    </tbody>
-                </table>
-                </div>
-             
-            
-               
-                <!-- <div class="cash-balance">
-                    <i class="fas fa-money-bill-wave cash-icon"></i>
-                    <span>现金：20000</span>
-                </div> -->
             </div>
         </div>
-                </div>
-            
-    <!--tmp2-->
-    <div class="dashboard-container">
+
+    <!--temp2-->
+        <div class="dashboard-container">
                 <!-- 左列：收益分布 -->
             <div class="iframe-container">
                     <div class="loading-indicator">
                         <div class="loading-spinner"></div>
                     </div>
-                    <iframe src="info_selectstock.html" title="市场概览" 
-        style="width: 1000px; height: 1000px; border: none;">
-       </iframe>
+                    <iframe src="info_selectstock.html" title="市场概览" style="width: 800px; height: 1000px; border: none;"></iframe>
             </div>
+ 
         <div class="dashboard-section">
 
                 
@@ -493,53 +298,6 @@
                         <!-- ... 市场总览的现有内容 ... -->
                     </div>
                 </div>
-                
-                <!-- <div class="market-overview">
-                    <div class="market-overview-title">
-                        <i class="fas fa-chart-pie"></i> 市场总览
-                    </div>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-title">涨跌分布</div>
-                            <div class="up-down-stats">
-                                <div class="stat-item">
-                                    <span class="label">家上涨</span>
-                                    <span class="value">38%</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="label">涨</span>
-                                    <span class="value positive-value">2072</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="label">3153 跌</span>
-                                    <span class="value negative-value"></span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="label">涨停</span>
-                                    <span class="value positive-value">34</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="label">跌停</span>
-                                    <span class="value negative-value">5</span>
-                                </div>
-                            </div>
-                            <div class="bar-graph">
-                                <div class="bar-graph-fill"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="volume-info">
-                            <div class="stat-title">成交量</div>
-                            <div class="volume-value">10055亿</div>
-                            <div class="stat-desc">两市共10055亿</div>
-                            <div class="volume-change">
-                                <i class="fas fa-arrow-up"></i> 增量129亿
-                            </div>
-                            <div class="stat-desc">较上日+1%</div>
-                        </div>
-                    </div>
-                </div> -->
                 </div>
 
 
