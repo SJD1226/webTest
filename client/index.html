@@ -464,8 +464,30 @@
                         <!-- ... 市场总览的现有内容 ... -->
                     </div>
                 </div>
+                <div class="panel">
+        <div class="panel-title">
+            <span>Financial News</span>
+            <div class="status">
+                <div class="status-dot"></div>
+                <span>Latest News</span>
+            </div>
+        </div>
+        <div class="news-container">
+            <div class="news-nav-controls">
+                <button class="news-nav-btn" id="prevNewsBtn">❮</button>
+                <button class="news-nav-btn" id="nextNewsBtn">❯</button>
+            </div>
+            <div class="news-track" id="newsTrack">
+                <!-- 新闻卡片将由JavaScript动态填充 -->
+            </div>
+        </div>
+        <div class="news-nav" id="newsIndicators">
+            <!-- 新闻指示器将由JavaScript动态填充 -->
+        </div>
+    </div>
+
                 
-                <!-- <div class="market-overview">
+                 <!-- <div class="market-overview">
                     <div class="market-overview-title">
                         <i class="fas fa-chart-pie"></i> 市场总览
                     </div>
@@ -510,10 +532,10 @@
                             <div class="stat-desc">较上日+1%</div>
                         </div>
                     </div>
+                </div> 
                 </div> -->
-                </div>
 
-
+</div> 
     <!-- 引入JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="assets/js/main.js"></script>
