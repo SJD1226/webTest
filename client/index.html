@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>金融SaaS仪表盘</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
     
     <!-- 引入样式文件 -->
     <link rel="stylesheet" href="assets/css/main.css">
@@ -160,12 +160,12 @@
                     
                     <!-- 收益率走势图 -->
                     <div class="return-container">
-                        <div class="chart-title">收益率走势对比</div>
+                        <div class="chart-title">Comparison of ROI</div>
                         
                         <div class="time-filter">
-                            <div class="time-tab">近1月</div>
-                            <div class="time-tab active">近3月</div>
-                            <div class="time-tab">近1年</div>
+                            <div class="time-tab">Past month</div>
+                            <div class="time-tab active">Past three months</div>
+                            <div class="time-tab">Past year</div>
                         </div>
                         
                         <div class="chart-wrapper-large">
@@ -175,11 +175,11 @@
                         <div class="chart-legend">
                             <div class="chart-legend-item">
                                 <div class="chart-legend-line" style="background-color: #2a5dff;"></div>
-                                <span>投资组合</span>
+                                <span>My Assets</span>
                             </div>
                             <div class="chart-legend-item">
                                 <div class="chart-legend-line" style="background-color: #ff6b6b;"></div>
-                                <span>沪深300</span>
+                                <span>S & P 500 ETF-SPDR</span>
                             </div>
                         </div>
                     </div>
@@ -604,7 +604,8 @@
    
 
     <!-- 引入JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="assets/js/main.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
 </body>
 </html>
