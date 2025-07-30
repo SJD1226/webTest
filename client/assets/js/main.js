@@ -735,7 +735,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         lineWidth: 1.5
                     },
                     pointLabels: {
-                        display: false,
+                        display: true,
                         font: {
                             size: 12,
                             weight: 'bold'
