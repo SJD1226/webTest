@@ -9,7 +9,6 @@
     
     <!-- 引入样式文件 -->
     <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/sidebar.css">
     <link rel="stylesheet" href="assets/css/top-nav.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
     <link rel="stylesheet" href="assets/css/demo.css">
@@ -17,8 +16,6 @@
      <link rel="stylesheet" href="assets/css/news.css">
 </head>
 <body>
-  
-    
     <!-- 主内容区 -->
     <div class="main-content">
         <!-- 顶部导航栏 -->
@@ -161,22 +158,22 @@
                     <!-- 收益分布面板内容 -->
                       <!-- 收益分布 -->
             <div class="panel">
-                <div class="panel-title">收益分布</div>
+                <div class="panel-title">Profit Distribution</div>
                 
                 <div class="time-tabs">
-                    <div class="time-tab">日</div>
-                    <div class="time-tab">周</div>
-                    <div class="time-tab active">月</div>
-                    <div class="time-tab">年</div>
+                    <div class="time-tab">day</div>
+                    <div class="time-tab">week</div>
+                    <div class="time-tab active">month</div>
+                    <div class="time-tab">year</div>
                 </div>
                 
                 <div class="continuous-earnings">
-                    <span class="continuous-earnings-text">您本月已连续9天正收益，点击晒晒收益连红</span>
+                    <span class="continuous-earnings-text">Continuous positive profit</span>
                     <div class="show-earnings">晒收益</div>
                 </div>
                 
                 <div class="calendar-header">
-                    <div class="calendar-title">2025年7月</div>
+                    <div class="calendar-title">2025.7</div>
                     <div class="calendar-arrows">
                         <div class="arrow-btn"><i class="fas fa-chevron-left"></i></div>
                         <div class="arrow-btn"><i class="fas fa-chevron-right"></i></div>
@@ -309,7 +306,7 @@
                     <div class="day-cell"></div>
                 </div>
                 
-                <div class="update-notice">更新</div>
+                <div class="update-notice">Update</div>
             </div>
                 </div>
                 
@@ -320,19 +317,19 @@
                        
             <!-- 雷达图 -->
             <div class="panel">
-                <div class="panel-title">雷达图</div>
+                <div class="panel-title">Radar Chart</div>
                 
                 <div class="chart-wrapper">
                     <canvas id="radarChart"></canvas>
                 </div>
                 
-                <div class="radar-labels">
+                <!-- <div class="radar-labels">
                     <span>DiscountedCashFlowScore</span>
                     <span>ReturnOnAssetsScore</span>
                     <span>DebtToEquityScore</span>
                     <span>PriceToEarningsScore</span>
                     <span>PriceToBookScore</span>
-                </div>
+                </div> -->
             </div>
             
             <!-- 资产列表 -->
@@ -403,13 +400,10 @@
         style="width: 1000px; height: 1000px; border: none;">
        </iframe>
             </div>
-
-    
         <div class="dashboard-section">
 
-            <h2 class="section-title">市场行情分析</h2>
                 
-                <div class="header">
+                <!-- <div class="header">
                     <div class="tabs">
                         <div class="tab-item active">今日行情</div>
                     </div>
@@ -454,9 +448,24 @@
                             <span>-0.37%</span>
                         </div>
                     </div>
+                </div> -->
+                <!-- 【新的】全球指数行情栏 -->
+                <div class="dashboard-section">
+                    <h2 class="section-title">Global Market Indexes</h2>
+                    
+                    <!-- 这个 div 将作为可水平滚动的容器 -->
+                    <div id="common-indexes-container" class="horizontal-scroll-container">
+                        <!-- 指数卡片将由 JavaScript 动态填充到这里 -->
+                        <div class="loading-placeholder">Loading market data...</div>
+                    </div>
+
+                    <!-- 您可以保留“市场总览”部分，如果需要的话，或者也删除它 -->
+                    <div class="market-overview">
+                        <!-- ... 市场总览的现有内容 ... -->
+                    </div>
                 </div>
                 
-                <div class="market-overview">
+                <!-- <div class="market-overview">
                     <div class="market-overview-title">
                         <i class="fas fa-chart-pie"></i> 市场总览
                     </div>
@@ -501,13 +510,9 @@
                             <div class="stat-desc">较上日+1%</div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 </div>
 
-                </div>
-    </div>
-    
-     
 
     <!-- 引入JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
