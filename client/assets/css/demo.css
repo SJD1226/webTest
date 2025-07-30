@@ -57,20 +57,36 @@
     border-bottom: 1px solid #f0f3fa;
     padding-bottom: 15px;
 }
-.table-con {
-    max-height: 550px; /* 固定最大高度 */
-    overflow-y: auto; /* 添加垂直滚动条 */
-    position: relative; /* 定位上下文 */
-  }
 
-  /* 固定表头 */
-  .table-con thead th {
-    position: sticky; /* 固定位置 */
-    top: 0; /* 固定在顶部 */
-    z-index: 10; /* 保证在滚动时保持置顶 */
-    background-color: #f5f5f5; /* 保证表头背景不透明 */
-  }
+/* 我们不再使用.table-con原有的样式 */
+      .table-con {
+        /* 不设置高度，由内部结构决定 */
+        position: relative;
+        overflow: hidden; /* 隐藏内部表格的溢出 */
+      }
 
+      /* 表头表格 */
+      .table-header {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      /* 表体容器 */
+      .table-body-container {
+        height: 500px; /* 固定高度，可以根据需要调整 */
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* 表体表格 */
+      .table-body {
+        width: 100%;
+        border-collapse: collapse;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: transform 0.5s ease; /* 平滑过渡效果 */
+      }
 .section-title {
     font-size: 24px;
     font-weight: 700;

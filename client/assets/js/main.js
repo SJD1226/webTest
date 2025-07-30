@@ -881,51 +881,138 @@ document.addEventListener('DOMContentLoaded', function() {
     
 });
 
-// // 新闻数据
-//         const newsData = [
-//             {
-//                 tag: "财经",
-//                 title: "上证指数突破3400点大关，创年内新高",
-//                 link: "#"
-//             },
-//             {
-//                 tag: "科技",
-//                 title: "新一代人工智能芯片发布，性能提升300%",
-//                 link: "#"
-//             },
-//             {
-//                 tag: "体育",
-//                 title: "中国女排成功晋级世界联赛决赛",
-//                 link: "#"
-//             },
-//             {
-//                 tag: "国际",
-//                 title: "多国领导人出席全球气候峰会",
-//                 link: "#"
-//             },
-//             {
-//                 tag: "娱乐",
-//                 title: "《失落的宝藏》首映票房突破10亿",
-//                 link: "#"
-//             }
-//         ];
-
-//         // 初始化滚动条
-//         function initNewsTicker() {
-//             const tickerContainer = document.getElementById('ticker-content');
-//             tickerContainer.innerHTML = ''; // 清空容器
+// 财经新闻数据
+        const newsData = [
+            {
+                id: 1,
+                tag: 'AAPL',
+                title: 'AAPL, AMZN & MSFT: Charting This Week\'s Mag 7 Earnings',
+                summary: 'It\'s the biggest earnings week of the quarter when it comes to market cap. The reports will be led by four Mag 7 companies.',
+                source: 'YouTube ',
+                date: '2025-08-01',
+                url: 'https://www.youtube-nocookie.com/embed/hOrzqtXI82M'
+            },
+            {
+                id: 2,
+                tag: 'NVDA',
+                title: '5 Stocks I\'m Buying As Retail Investors Take Over The Market',
+                summary: 'Retail-driven meme stock mania is back, echoing 2021\'s irrational exuberance, with surges in fundamentally weak, heavily shorted stocks. Market leadership is shifting from the \"Magnificent 7\" to the \"...,\" as retail investors dominate trading volumes. This article explores five stocks poised for growth amidst this trend.',
+                source: 'stockanalysis.com',
+                date: '2025-07-30',
+                url: 'https://stockanalysis.com/out/news?url=https://seekingalpha.com/article/4804297-5-stocks-im-buying-as-retail-investors-take-over-the-market'
+            },
+            {
+                id: 3,
+                tag: 'SPY',
+                title: 'S&P 500: This Chart Calls A Crash; Ignore It (Technical Analysis)',
+                summary: 'The S&P 500 rally remains technically strong; dips are shallow and continue to present buying opportunities, with bullish momentum likely to persist near-term. Bearish long-term charts circulating onl...',
+                source: 'stockanalysis.com',
+                date: '2025-07-28',
+                url: 'https://stockanalysis.com/out/news?url=https://seekingalpha.com/article/4804926-sp500-this-chart-calls-crash-ignore-it-technical-analysis'
+            },
+            {
+                id: 4,
+                tag: 'EEM',
+                title: 'Disruptive Theme of the Week: Emerging Markets Fintech',
+                summary: 'Financial technology (fintech), broadly speaking, allows the remote delivery of financial services to businesses and individuals through computers or mobile devices. Fintech encompasses everything fro...',
+                source: 'etftrends',
+                date: '2025-07-25',
+                url: 'https://www.etftrends.com/disruptive-technology-channel/disruptive-theme-of-the-week-emerging-markets-fintech/'
+            }
+        ];
+        
+        // 渲染新闻
+        const renderNews = () => {
+            const newsTrack = document.getElementById('newsTrack');
+            const newsIndicators = document.getElementById('newsIndicators');
             
-//             // 创建新闻项DOM
-//             newsData.forEach(item => {
-//                 const newsElement = document.createElement('div');
-//                 newsElement.className = 'ticker-item';
-//                 newsElement.innerHTML = `
-//                     <span class="news-tag">${item.tag}</span>
-//                     <a href="${item.link}" target="_blank">${item.title}</a>
-//                 `;
-//                 tickerContainer.appendChild(newsElement);
-//             });
+            newsTrack.innerHTML = '';
+            newsIndicators.innerHTML = '';
             
-//             // 克隆内容以创建无缝滚动效果
-//             tickerContainer.innerHTML += tickerContainer.innerHTML;
-//         }
+            newsData.forEach((item, index) => {
+                // 创建新闻卡片
+                const newsCard = document.createElement('div');
+                newsCard.className = 'news-card';
+                newsCard.innerHTML = `
+                    <div>
+                        <div class="news-tag">${item.tag}</div>
+                        <div class="news-title">${item.title}</div>
+                        <div class="news-summary">${item.summary}</div>
+                    </div>
+                    <div>
+                        <div class="news-meta">
+                            <span>${item.source}</span>
+                            <span>${item.date}</span>
+                        </div>
+                        <a href="${item.url}" target="_blank" class="news-link">original read →</a>
+                    </div>
+                `;
+                newsTrack.appendChild(newsCard);
+                
+                // 创建指示器
+                const indicator = document.createElement('div');
+                indicator.className = 'news-indicator';
+                if (index === 0) indicator.classList.add('active');
+                indicator.dataset.index = index;
+                indicator.addEventListener('click', () => goToNews(index));
+                newsIndicators.appendChild(indicator);
+            });
+        };
+        
+        // 初始化新闻轮播
+        let currentNewsIndex = 0;
+        let newsTimer;
+        
+        const updateNewsPosition = () => {
+            const newsTrack = document.getElementById('newsTrack');
+            newsTrack.style.transform = `translateX(-${currentNewsIndex * 100}%)`;
+            
+            // 更新指示器状态
+            document.querySelectorAll('.news-indicator').forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentNewsIndex);
+            });
+        };
+        
+        const goToNews = (index) => {
+            currentNewsIndex = index;
+            updateNewsPosition();
+            resetNewsTimer();
+        };
+        
+        const nextNews = () => {
+            currentNewsIndex = (currentNewsIndex + 1) % newsData.length;
+            updateNewsPosition();
+            resetNewsTimer();
+        };
+        
+        const prevNews = () => {
+            currentNewsIndex = (currentNewsIndex - 1 + newsData.length) % newsData.length;
+            updateNewsPosition();
+            resetNewsTimer();
+        };
+        
+        const startNewsTimer = () => {
+            newsTimer = setInterval(nextNews, 5000);
+        };
+        
+        const resetNewsTimer = () => {
+            clearInterval(newsTimer);
+            startNewsTimer();
+        };
+        
+        // 初始化
+        renderNews();
+        updateNewsPosition();
+        startNewsTimer();
+        
+        // 添加事件监听
+        document.getElementById('prevNewsBtn').addEventListener('click', prevNews);
+        document.getElementById('nextNewsBtn').addEventListener('click', nextNews);
+        
+        // 添加悬浮暂停功能
+        const newsTrack = document.getElementById('newsTrack');
+        newsTrack.addEventListener('mouseenter', () => {
+            clearInterval(newsTimer);
+        });
+        
+        newsTrack.addEventListener('mouseleave', startNewsTimer);
