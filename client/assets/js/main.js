@@ -797,6 +797,318 @@ document.addEventListener('DOMContentLoaded', function() {
     // setInterval(fetchAndUpdateRadarChart, 30000);
 });
 
+     // Global data storage
+        const mockStocks = [
+            {
+                symbol: "AAPL",
+                lastSalePrice: "172.50",
+                netChange: "-0.82",
+                percentageChange: "-0.47",
+                volume: 62784000,
+                stockType: "Common Stock",
+                name: "Apple Inc."
+            },
+            {
+                symbol: "SPY",
+                lastSalePrice: "452.78",
+                netChange: "+1.25",
+                percentageChange: "+0.28",
+                volume: 73592000,
+                stockType: "ETF",
+                name: "S&P 500 ETF"
+            },
+            {
+                symbol: "VFIAX",
+                lastSalePrice: "435.67",
+                netChange: "-0.35",
+                percentageChange: "-0.08",
+                volume: 25684000,
+                stockType: "Managed Fund",
+                name: "Vanguard 500 Index Fund"
+            }
+        ];
+
+        let userStocks = [...mockStocks];
+        
+        // Simple interaction logic
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Modal control
+        const modal = document.getElementById('add-stock-modal');
+        const addBtn = document.getElementById('add-stock-btn');
+        const closeBtn = document.getElementById('close-modal-btn');
+        const cancelBtn = document.getElementById('cancel-modal-btn');
+        const form = document.getElementById('add-stock-form');
+        const submitBtn = document.getElementById('submit-stock-btn');
+        const deleteBtn = document.getElementById('delete-stock-btn');
+        const selectAllCheckbox = document.getElementById('select-all');
+
+        addBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        });
+
+        function closeModal() {
+            modal.classList.remove('active');
+            form.reset();
+            document.body.style.overflow = 'auto';
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Prevent form submission default behavior
+        form.addEventListener('submit', (e) => e.preventDefault());
+        
+        // Format volume display
+        function formatVolume(volume) {
+            if (volume >= 100000000) {
+                return (volume / 100000000).toFixed(2) + 'B';
+            } else if (volume >= 10000) {
+                return (volume / 10000).toFixed(2) + 'K';
+            } else {
+                return volume;
+            }
+        }
+
+        // Get stock type name
+        function getStockTypeName(type) {
+            const typeMap = {
+                'Common Stock': 'Common Stock',
+                'ETF': 'ETF',
+                'Managed Fund': 'Managed Fund',
+                'REITs': 'REIT',
+                'Preferred Stock': 'Preferred Stock'
+            };
+            return typeMap[type] || type;
+        }
+
+        // Add stock function
+        function addStock() {
+            const name = document.getElementById('stock-name').value.trim();
+            const code = document.getElementById('stock-code').value.trim().toUpperCase();
+            const price = parseFloat(document.getElementById('stock-price').value);
+            const change = parseFloat(document.getElementById('stock-change').value);
+            const type = document.getElementById('stock-type').value;
+            
+            // Validate data
+            if (!name || !code || isNaN(price) || isNaN(change) || !type) {
+                alert('Please fill in all stock information');
+                return;
+            }
+            
+            // Check if stock already exists
+            if (userStocks.some(stock => stock.symbol === code)) {
+                alert('This stock is already in your portfolio');
+                return;
+            }
+            
+            // Create new stock object
+            const newStock = {
+                symbol: code,
+                name: name,
+                lastSalePrice: price.toFixed(2),
+                netChange: change.toFixed(2),
+                percentageChange: (change / 100).toFixed(2),
+                stockType: type,
+                volume: Math.floor(Math.random() * 10000000) + 500000
+            };
+            
+            // Add to stock list
+            userStocks.push(newStock);
+            
+            // Update display
+            renderStocks();
+            
+            // Close modal
+            closeModal();
+            
+            // Show success notification
+            showNotification(`Stock ${name} (${code}) added successfully!`);
+        }
+
+        // Delete single stock
+        function deleteStock(symbol) {
+            userStocks = userStocks.filter(stock => stock.symbol !== symbol);
+            renderStocks();
+            showNotification(`Stock ${symbol} deleted`);
+        }
+
+        // Delete selected stocks
+        function deleteSelectedStocks() {
+            const selectedCheckboxes = document.querySelectorAll('.stock-checkbox:checked');
+            
+            if (selectedCheckboxes.length === 0) {
+                alert('Please select stocks to delete');
+                return;
+            }
+            
+            const symbolsToDelete = Array.from(selectedCheckboxes).map(checkbox => 
+                checkbox.getAttribute('data-symbol')
+            );
+            
+            userStocks = userStocks.filter(stock => 
+                !symbolsToDelete.includes(stock.symbol)
+            );
+            
+            renderStocks();
+            showNotification(`Deleted ${symbolsToDelete.length} stocks`);
+        }
+
+        // Render stock list
+        function renderStocks() {
+            const tbody = document.getElementById('stock-data');
+            const placeholder = document.getElementById('empty-placeholder');
+            
+            // Show/hide empty state
+            if (userStocks.length === 0) {
+                placeholder.style.display = 'block';
+                tbody.innerHTML = '';
+                return;
+            }
+            
+            placeholder.style.display = 'none';
+            tbody.innerHTML = '';
+            
+            userStocks.forEach(stock => {
+                const change = parseFloat(stock.netChange);
+                const changeClass = change >= 0 ? 'up' : 'down';
+                const sign = change >= 0 ? '+' : '';
+                const percent = Math.abs(change / parseFloat(stock.lastSalePrice) * 100).toFixed(2);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="checkbox" class="stock-checkbox" data-symbol="${stock.symbol}"></td>
+                    <td>
+                        <div class="stock-info">
+                            <div class="stock-name">${stock.name}</div>
+                            <div class="stock-code">${stock.symbol}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="stock-price">${stock.lastSalePrice}</div>
+                    </td>
+                    <td>
+                        <div class="stock-change ${changeClass}">
+                            <div class="change-value">${sign}${Math.abs(change).toFixed(2)}</div>
+                            <div class="change-percent">${sign}${percent}%</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="volume">${formatVolume(stock.volume)}</div>
+                    </td>
+                    <td>
+                        <div class="market-cap">${getStockTypeName(stock.stockType)}</div>
+                    </td>
+                    <td class="action-cell">
+                        <button class="action-btn delete-btn" data-symbol="${stock.symbol}">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Add delete button event listeners
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const symbol = this.getAttribute('data-symbol');
+                    if (confirm(`Are you sure you want to delete ${symbol}?`)) {
+                        deleteStock(symbol);
+                    }
+                });
+            });
+            
+            // Add checkbox event listeners
+            document.querySelectorAll('.stock-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectAllState);
+            });
+        }
+        
+        // Update select all checkbox state
+        function updateSelectAllState() {
+            const checkboxes = document.querySelectorAll('.stock-checkbox');
+            const allChecked = checkboxes.length > 0 && 
+                Array.from(checkboxes).every(checkbox => checkbox.checked);
+            
+            selectAllCheckbox.checked = allChecked;
+        }
+        
+        // Select all/deselect all functionality
+        selectAllCheckbox.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.stock-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+        
+        // Show notification message
+        function showNotification(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.right = '20px';
+            toast.style.backgroundColor = '#333';
+            toast.style.color = 'white';
+            toast.style.padding = '12px 20px';
+            toast.style.borderRadius = '6px';
+            toast.style.zIndex = '1000';
+            toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.3s ease';
+            
+            document.body.appendChild(toast);
+            
+            // Animate in
+            setTimeout(() => {
+                toast.style.opacity = '1';
+            }, 10);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Add submit button listener
+        submitBtn.addEventListener('click', addStock);
+        
+        // Add delete button listener
+        deleteBtn.addEventListener('click', deleteSelectedStocks);
+        
+        // Render stocks on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStocks();
+            
+            // Add keyboard event listener
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        });
+
 // // 新闻数据
 //         const newsData = [
 //             {
@@ -848,4 +1160,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 //         // 页面加载完成后执行初始化
 //         window.addEventListener('DOMContentLoaded', initNewsTicker);
-   
+
+// Global data storage
+       

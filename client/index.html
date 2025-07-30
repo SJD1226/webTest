@@ -17,47 +17,7 @@
      <link rel="stylesheet" href="assets/css/news.css">
 </head>
 <body>
-    <!-- 侧边导航栏 -->
-    <div class="sidebar">
-        <div class="logo-container">
-            <div class="logo-icon">7</div>
-            <div class="logo-text">
-                Portfolio Management
-            </div>
-        </div>
-        
-        <div class="menu-title">MAIN MENU</div>
-        
-        <div class="menu-item active">
-            <i class="fas fa-chart-pie"></i>
-            <span>Dashboard</span>
-        </div>
-        
-        <div class="menu-item">
-            <i class="fas fa-copy"></i>
-            <span>Asset Allocation</span>
-        </div>
-        <div class="menu-item">
-            <i class="fas fa-th-large"></i>
-            <span>Watchlist</span>
-        </div>
-        <div class="menu-item">
-            <i class="fas fa-puzzle-piece"></i>
-            <span>Market Quotes</span>
-        </div>
-        <div class="menu-item">
-            <i class="fas fa-cube"></i>
-            <span>Watchlist Order</span>
-        </div>
-        <div class="menu-item">
-            <i class="fas fa-clipboard-list"></i>
-            <span>Stock</span>
-        </div>
-        <div class="menu-item">
-            <i class="fas fa-chart-line"></i>
-            <span>Charts</span>
-        </div>
-    </div>
+  
     
     <!-- 主内容区 -->
     <div class="main-content">
@@ -435,77 +395,19 @@
     <!--tmp2-->
     <div class="dashboard-container">
                 <!-- 左列：收益分布 -->
-                <div class="dashboard-section">
-
-                <div class="stock-container">
-                <!-- 顶部指数信息 -->
-                <div class="indices-header">
-                    <div class="index-item">
-                        <div class="index-name">Shanghai Index</div>
-                        <div class="index-value">3594.94</div>
-                        <div class="index-change down">-0.30%</div>
+            <div class="iframe-container">
+                    <div class="loading-indicator">
+                        <div class="loading-spinner"></div>
                     </div>
-                    <div class="index-item">
-                        <div class="index-name">Shenzhen Index</div>
-                        <div class="index-value">11165.25</div>
-                        <div class="index-change down">-0.25%</div>
-                    </div>
-                    <div class="index-item">
-                        <div class="index-name">ChiNext Index</div>
-                        <div class="index-value">2338.33</div>
-                        <div class="index-change down">-0.30%</div>
-                    </div>
-                </div>
-                
-                <!-- 功能导航区域 -->
-                <div class="function-nav">
-                    <div class="tabs">
-                        <div class="tab active">Self-selected stocks</div>
-                    </div>
-                    
-                    <div class="buttons">
-                        <button class="btn add">Add stocks</button>
-                        <button class="btn home">Del Stocks</button>
-                    </div>
-                    
-                    <div class="filter">
-                        <button class="filter-btn active">All</button>
-                    </div>
-                </div>
-                
-                <!-- 股票表格 -->
-                <table class="stock-table">
-                    <thead>
-                        <tr>
-                            <th width="25%"> stocks </th>
-
-                            <th width="15%"> Current price </th>
-
-                            <th width="15%"> fluctuation range </th>
-
-                            <th width="15%"> Transaction volume </th>
-
-                            <th width="15%"> type </th>
-
-                            <th width="15%"> year-to-date </th>
-                        </tr>
-                    </thead>
-                    <tbody id="stock-data">
-                <!-- 数据将通过JavaScript动态填充 -->
-            </tbody>
-                </table>
+                    <iframe src="info_selectstock.html" title="市场概览" 
+        style="width: 1000px; height: 1000px; border: none;">
+       </iframe>
             </div>
-            </div>
-
-        
-
-
-
 
     
-                <div class="dashboard-section">
+        <div class="dashboard-section">
 
-<h2 class="section-title">市场行情分析</h2>
+            <h2 class="section-title">市场行情分析</h2>
                 
                 <div class="header">
                     <div class="tabs">
@@ -602,14 +504,10 @@
                 </div>
                 </div>
 
-
-
                 </div>
     </div>
     
      
-                
-   
 
     <!-- 引入JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

@@ -3,26 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 引入样式文件 -->
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/sidebar.css">
-    <link rel="stylesheet" href="assets/css/top-nav.css">
-    <link rel="stylesheet" href="assets/css/dashboard.css">
-    <link rel="stylesheet" href="assets/css/demo.css">
-    <link rel="stylesheet" href="assets/css/tmp2.css">
-    <link rel="stylesheet" href="assets/css/news.css">
+    <title>Stock Portfolio</title>
     <style>
-        /* 添加股票管理界面样式 */
-        .stock-manager-container {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            padding: 16px;
+        }
+        
+        .container {
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.08);
             overflow: hidden;
-            margin-bottom: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
         }
         
+        /* Index header area */
         .indices-header {
             display: flex;
             padding: 16px 20px;
@@ -60,6 +66,7 @@
             color: #f43c59;
         }
         
+        /* Function navigation area */
         .function-nav {
             display: flex;
             align-items: center;
@@ -145,6 +152,7 @@
             border-color: #91caff;
         }
         
+        /* Table styles */
         .stock-table {
             width: 100%;
             border-collapse: collapse;
@@ -212,42 +220,7 @@
             color: #666;
         }
         
-        .empty-placeholder {
-            padding: 40px 20px;
-            text-align: center;
-            color: #999;
-            display: none;
-        }
-        
-        .empty-placeholder p {
-            margin-top: 10px;
-            font-size: 15px;
-        }
-        
-        .action-cell {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .action-btn {
-            padding: 4px 8px;
-            font-size: 13px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .edit-btn {
-            background-color: #e6f4ff;
-            color: #1677ff;
-        }
-        
-        .delete-btn {
-            background-color: #fff2f0;
-            color: #f43c59;
-        }
-        
-        /* 添加股票模态框 */
+        /* Add stock modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -380,6 +353,41 @@
             gap: 12px;
         }
         
+        .empty-placeholder {
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+        }
+        
+        .empty-placeholder p {
+            margin-top: 10px;
+            font-size: 15px;
+        }
+        
+        .action-cell {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 4px 8px;
+            font-size: 13px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .edit-btn {
+            background-color: #e6f4ff;
+            color: #1677ff;
+        }
+        
+        .delete-btn {
+            background-color: #fff2f0;
+            color: #f43c59;
+        }
+        
+        /* Responsive design */
         @media (max-width: 768px) {
             .indices-header {
                 flex-direction: column;
@@ -410,382 +418,76 @@
     </style>
 </head>
 <body>
-    <!-- 顶部导航栏 -->
-    <div class="top-nav">
-        <div class="nav-left">
-            <div class="brand-logo">Portfolio Analysis</div>
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="searching...">
+    <div class="container">
+        <!-- Top index information -->
+        <div class="indices-header">
+            <div class="index-item">
+                <div class="index-name">Shanghai Composite</div>
+                <div class="index-value">3594.94</div>
+                <div class="index-change down">-0.30%</div>
+            </div>
+            <div class="index-item">
+                <div class="index-name">Shenzhen Component</div>
+                <div class="index-value">11165.25</div>
+                <div class="index-change down">-0.25%</div>
+            </div>
+            <div class="index-item">
+                <div class="index-name">ChiNext</div>
+                <div class="index-value">2338.33</div>
+                <div class="index-change down">-0.30%</div>
             </div>
         </div>
         
-        <div class="nav-right">
-            <div class="nav-icon">
-                <i class="fas fa-file"></i>
+        <!-- Function navigation area -->
+        <div class="function-nav">
+            <div class="tabs">
+                <div class="tab active">Stocks</div>
+                <div class="tab">Funds</div>
+                <div class="tab">Portfolio</div>
             </div>
-            <div class="nav-icon">
-                <i class="fas fa-shopping-cart"></i>
+            
+            <div class="buttons">
+                <button class="btn add" id="add-stock-btn">Add Stock</button>
+                <button class="btn home" id="delete-stock-btn">Delete Selected</button>
             </div>
-            <div class="nav-icon">
-                <i class="fas fa-bell"></i>
-                <div class="notification-badge">3</div>
+            
+            <div class="filter">
+                <button class="filter-btn active">All</button>
             </div>
-            <div class="nav-icon">
-                <i class="fas fa-envelope"></i>
-                <div class="notification-badge">7</div>
-            </div>
-            <div class="user-avatar">JS</div>
-            <div class="nav-icon">
-                <i class="fas fa-cog"></i>
-            </div>
+        </div>
+        
+        <!-- Stock table -->
+        <table class="stock-table">
+            <thead>
+                <tr>
+                    <th width="5%"><input type="checkbox" id="select-all"></th>
+                    <th width="20%">Stock</th>
+                    <th width="15%">Price</th>
+                    <th width="15%">Change</th>
+                    <th width="15%">Volume</th>
+                    <th width="15%">Market Cap</th>
+                    <th width="15%">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="stock-data">
+                <!-- Data will be populated dynamically via JavaScript -->
+            </tbody>
+        </table>
+        
+        <div id="empty-placeholder" class="empty-placeholder" style="display:none;">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+                <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
+                <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+            <p>No stocks in your portfolio. Click "Add Stock" to add stocks.</p>
         </div>
     </div>
     
-    <!-- 主内容区 -->
-    <div class="main-content">
-        <!-- 金融数据面板 -->
-        <div class="dashboard-container-financial">
-            <div class="financial-dashboard">
-                <!-- 资产概览 -->
-                <div class="asset-summary">
-                    <div class="asset-item">
-                        <div class="item-title">
-                            <i class="fas fa-wallet"></i> Total Market Value
-                        </div>
-                        <div class="item-value" id="total-market-value">100,000</div>
-                        <div class="item-desc">USD</div>
-                    </div>
-                    
-                    <div class="asset-item">
-                        <div class="item-title">
-                            <i class="fas fa-chart-line"></i> Return Percent
-                        </div>
-                        <div class="item-value" id="total-return-percent">2.3%</div>
-                        <div class="return-up">
-                            <i class="fas fa-arrow-up" id="return-change"></i> 
-                        </div>
-                    </div>
-                    
-                    <div class="asset-item">
-                        <div class="item-title">
-                            <i class="fas fa-coins"></i> Total Profit
-                        </div>
-                        <div class="item-value" id="total-profit">+2100</div>
-                    </div>
-                </div>
-                
-                <!-- 图表区域 -->
-                <div class="charts-container">
-                    <!-- 资产分布图 -->
-                    <div class="chart-container">
-                        <div class="chart-title">Assets Distribution</div>
-                        <div class="chart-wrapper">
-                            <canvas id="assetChart" width="200" height="150"></canvas>
-                        </div>
-                        
-                        <div class="legend">
-                            <div class="legend-item">
-                                <div class="legend-color" style="background-color: #2a5dff;"></div>
-                                <span>Stock 38%</span>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-color" style="background-color: #0dbd70;"></div>
-                                <span>Bond 25%</span>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-color" style="background-color: #ff6b6b;"></div>
-                                <span>Funds 18%</span>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-color" style="background-color: #a29bfe;"></div>
-                                <span>Cash 7%</span>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-color" style="background-color: #ffd166;"></div>
-                                <span>Others 12%</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 收益率走势图 -->
-                    <div class="return-container">
-                        <div class="chart-title">Comparison of ROI</div>
-                        
-                        <div class="time-filter">
-                            <div class="time-tab">Past month</div>
-                            <div class="time-tab active">Past three months</div>
-                            <div class="time-tab">Past year</div>
-                        </div>
-                        
-                        <div class="chart-wrapper-large">
-                            <canvas id="returnChart" width="400" height="180"></canvas>
-                        </div>
-                        
-                        <div class="chart-legend">
-                            <div class="chart-legend-item">
-                                <div class="chart-legend-line" style="background-color: #2a5dff;"></div>
-                                <span>My Assets</span>
-                            </div>
-                            <div class="chart-legend-item">
-                                <div class="chart-legend-line" style="background-color: #ff6b6b;"></div>
-                                <span>S & P 500 ETF-SPDR</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 集成金融数据面板 -->
-        <div class="dashboard-container">
-            <!-- 左列：收益分布 -->
-            <div class="dashboard-section">
-                <!-- 收益分布面板内容 -->
-                <div class="panel">
-                    <div class="panel-title">收益分布</div>
-                    
-                    <div class="time-tabs">
-                        <div class="time-tab">日</div>
-                        <div class="time-tab">周</div>
-                        <div class="time-tab active">月</div>
-                        <div class="time-tab">年</div>
-                    </div>
-                    
-                    <div class="continuous-earnings">
-                        <span class="continuous-earnings-text">您本月已连续9天正收益，点击晒晒收益连红</span>
-                        <div class="show-earnings">晒收益</div>
-                    </div>
-                    
-                    <div class="calendar-header">
-                        <div class="calendar-title">2025年7月</div>
-                        <div class="calendar-arrows">
-                            <div class="arrow-btn"><i class="fas fa-chevron-left"></i></div>
-                            <div class="arrow-btn"><i class="fas fa-chevron-right"></i></div>
-                        </div>
-                    </div>
-                    
-                    <div class="calendar-grid">
-                        <!-- 日历内容 -->
-                    </div>
-                    
-                    <div class="update-notice">更新</div>
-                </div>
-            </div>
-            
-            <!-- 中列：雷达图和资产列表 -->
-            <div class="dashboard-section">
-                <!-- 雷达图 -->
-                <div class="panel">
-                    <div class="panel-title">雷达图</div>
-                    
-                    <div class="chart-wrapper">
-                        <canvas id="radarChart"></canvas>
-                    </div>
-                    
-                    <div class="radar-labels">
-                        <span>DiscountedCashFlowScore</span>
-                        <span>ReturnOnAssetsScore</span>
-                        <span>DebtToEquityScore</span>
-                        <span>PriceToEarningsScore</span>
-                        <span>PriceToBookScore</span>
-                    </div>
-                </div>
-                
-                <!-- 资产列表 -->
-                <div class="panel">
-                    <div class="panel-title">
-                        <span>assets list</span>
-                    </div>
-                    <div class="table-con">
-                        <table class="assets-table">
-                            <thead>
-                                <tr>
-                                    <th>name</th>
-                                    <th>quantity</th>
-                                    <th>profit</th>
-                                    <th>return percent</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- 资产列表内容 -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 股票管理界面 -->
-        <div class="stock-manager-container">
-            <!-- 顶部指数信息 -->
-            <div class="indices-header">
-                <div class="index-item">
-                    <div class="index-name">Shanghai Composite</div>
-                    <div class="index-value">3594.94</div>
-                    <div class="index-change down">-0.30%</div>
-                </div>
-                <div class="index-item">
-                    <div class="index-name">Shenzhen Component</div>
-                    <div class="index-value">11165.25</div>
-                    <div class="index-change down">-0.25%</div>
-                </div>
-                <div class="index-item">
-                    <div class="index-name">ChiNext</div>
-                    <div class="index-value">2338.33</div>
-                    <div class="index-change down">-0.30%</div>
-                </div>
-            </div>
-            
-            <!-- 功能导航区域 -->
-            <div class="function-nav">
-                <div class="tabs">
-                    <div class="tab active">Stocks</div>
-                    <div class="tab">Funds</div>
-                    <div class="tab">Portfolio</div>
-                </div>
-                
-                <div class="buttons">
-                    <button class="btn add" id="add-stock-btn">Add Stock</button>
-                    <button class="btn home" id="delete-stock-btn">Delete Selected</button>
-                </div>
-                
-                <div class="filter">
-                    <button class="filter-btn active">All</button>
-                </div>
-            </div>
-            
-            <!-- 股票表格 -->
-            <table class="stock-table">
-                <thead>
-                    <tr>
-                        <th width="25%">Stock</th>
-                        <th width="15%">Price</th>
-                        <th width="15%">Change</th>
-                        <th width="15%">Volume</th>
-                        <th width="15%">Market Cap</th>
-                        <th width="15%">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="stock-data">
-                    <!-- 数据将通过JavaScript动态填充 -->
-                </tbody>
-            </table>
-            
-            <div id="empty-placeholder" class="empty-placeholder">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5">
-                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                    <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
-                    <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
-                    <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
-                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                </svg>
-                <p>No stocks in your portfolio. Click "Add Stock" to add stocks.</p>
-            </div>
-        </div>
-        
-        <!-- 市场行情分析 -->
-        <div class="dashboard-section">
-            <h2 class="section-title">市场行情分析</h2>
-            
-            <div class="header">
-                <div class="tabs">
-                    <div class="tab-item active">今日行情</div>
-                </div>
-            </div>
-            
-            <div class="category-tabs">
-                <div class="category-tab active">沪深</div>
-                <div class="category-tab">港股</div>
-                <div class="category-tab">美股</div>
-                <div class="category-tab">黄金</div>
-                <div class="category-tab">国内债</div>
-            </div>
-            
-            <div class="time-container">
-                <div class="trade-time">交易中 2025-07-25 11:03</div>
-            </div>
-            
-            <div class="indices-container">
-                <div class="index-card">
-                    <div class="index-name">上证指数</div>
-                    <div class="index-value">3593.25</div>
-                    <div class="index-change negative">
-                        <span>-12.48</span>
-                        <span>-0.35%</span>
-                    </div>
-                </div>
-                
-                <div class="index-card">
-                    <div class="index-name">深证成指</div>
-                    <div class="index-value">11155.52</div>
-                    <div class="index-change negative">
-                        <span>-37.54</span>
-                        <span>-0.34%</span>
-                    </div>
-                </div>
-                
-                <div class="index-card">
-                    <div class="index-name">创业板指</div>
-                    <div class="index-value">2336.72</div>
-                    <div class="index-change negative">
-                        <span>-8.64</span>
-                        <span>-0.37%</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="market-overview">
-                <div class="market-overview-title">
-                    <i class="fas fa-chart-pie"></i> 市场总览
-                </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-title">涨跌分布</div>
-                        <div class="up-down-stats">
-                            <div class="stat-item">
-                                <span class="label">家上涨</span>
-                                <span class="value">38%</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="label">涨</span>
-                                <span class="value positive-value">2072</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="label">3153 跌</span>
-                                <span class="value negative-value"></span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="label">涨停</span>
-                                <span class="value positive-value">34</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="label">跌停</span>
-                                <span class="value negative-value">5</span>
-                            </div>
-                        </div>
-                        <div class="bar-graph">
-                            <div class="bar-graph-fill"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="volume-info">
-                        <div class="stat-title">成交量</div>
-                        <div class="volume-value">10055亿</div>
-                        <div class="stat-desc">两市共10055亿</div>
-                        <div class="volume-change">
-                            <i class="fas fa-arrow-up"></i> 增量129亿
-                        </div>
-                        <div class="stat-desc">较上日+1%</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 添加股票模态框 -->
+    <!-- Add stock modal -->
     <div class="modal-overlay" id="add-stock-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -832,12 +534,8 @@
         </div>
     </div>
 
-    <!-- 引入JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="assets/js/main.js"></script>
-    
     <script>
-        // 全局数据存储
+        // Global data storage
         const mockStocks = [
             {
                 symbol: "AAPL",
@@ -865,12 +563,57 @@
                 volume: 25684000,
                 stockType: "Managed Fund",
                 name: "Vanguard 500 Index Fund"
-            }
+            },
+            {
+        "symbol": "MSFT",
+        "lastSalePrice": "513.46",
+        "netChange": "0.96",
+        "percentageChange": "0.19",
+        "volume": 1590,
+        "stockType": "Common Stock",
+        "name": "Microsoft Corporation"
+    },
+    {
+        "symbol": "GOOGL",
+        "lastSalePrice": "192.52",
+        "netChange": "-0.06",
+        "percentageChange": "-0.03",
+        "volume": 11426,
+        "stockType": "Class A Common Stock",
+        "name": "Alphabet Inc."
+    },
+    {
+        "symbol": "TSLA",
+        "lastSalePrice": "326.82",
+        "netChange": "1.23",
+        "percentageChange": "0.38",
+        "volume": 38553,
+        "stockType": "Common Stock",
+        "name": "Tesla, Inc."
+    },
+    {
+        "symbol": "AMZN",
+        "lastSalePrice": "233.37",
+        "netChange": "0.58",
+        "percentageChange": "0.25",
+        "volume": 7608,
+        "stockType": "Common Stock",
+        "name": "Amazon.com, Inc."
+    },
+    {
+        "symbol": "NVDA",
+        "lastSalePrice": "179.05",
+        "netChange": "2.30",
+        "percentageChange": "1.30",
+        "volume": 183485,
+        "stockType": "Common Stock",
+        "name": "NVIDIA Corporation"
+    }
         ];
 
         let userStocks = [...mockStocks];
         
-        // 简单交互逻辑
+        // Simple interaction logic
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -885,7 +628,7 @@
             });
         });
 
-        // 模态框控制
+        // Modal control
         const modal = document.getElementById('add-stock-modal');
         const addBtn = document.getElementById('add-stock-btn');
         const closeBtn = document.getElementById('close-modal-btn');
@@ -893,10 +636,11 @@
         const form = document.getElementById('add-stock-form');
         const submitBtn = document.getElementById('submit-stock-btn');
         const deleteBtn = document.getElementById('delete-stock-btn');
+        const selectAllCheckbox = document.getElementById('select-all');
 
         addBtn.addEventListener('click', () => {
             modal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // 防止背景滚动
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
         });
 
         function closeModal() {
@@ -908,30 +652,28 @@
         closeBtn.addEventListener('click', closeModal);
         cancelBtn.addEventListener('click', closeModal);
 
-        // 点击模态框外部关闭
+        // Close modal when clicking outside
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 closeModal();
             }
         });
 
-        // 阻止表单提交时的默认行为
+        // Prevent form submission default behavior
         form.addEventListener('submit', (e) => e.preventDefault());
         
-        // 格式化成交量
+        // Format volume display
         function formatVolume(volume) {
             if (volume >= 100000000) {
                 return (volume / 100000000).toFixed(2) + 'B';
-            } else if (volume >= 1000000) {
-                return (volume / 1000000).toFixed(2) + 'M';
-            } else if (volume >= 1000) {
-                return (volume / 1000).toFixed(2) + 'K';
+            } else if (volume >= 10000) {
+                return (volume / 10000).toFixed(2) + 'K';
             } else {
                 return volume;
             }
         }
 
-        // 获取股票类型名称
+        // Get stock type name
         function getStockTypeName(type) {
             const typeMap = {
                 'Common Stock': 'Common Stock',
@@ -943,7 +685,7 @@
             return typeMap[type] || type;
         }
 
-        // 添加股票函数
+        // Add stock function
         function addStock() {
             const name = document.getElementById('stock-name').value.trim();
             const code = document.getElementById('stock-code').value.trim().toUpperCase();
@@ -951,19 +693,19 @@
             const change = parseFloat(document.getElementById('stock-change').value);
             const type = document.getElementById('stock-type').value;
             
-            // 验证数据
+            // Validate data
             if (!name || !code || isNaN(price) || isNaN(change) || !type) {
                 alert('Please fill in all stock information');
                 return;
             }
             
-            // 检查股票是否已经存在
+            // Check if stock already exists
             if (userStocks.some(stock => stock.symbol === code)) {
                 alert('This stock is already in your portfolio');
                 return;
             }
             
-            // 创建新股票对象
+            // Create new stock object
             const newStock = {
                 symbol: code,
                 name: name,
@@ -974,32 +716,53 @@
                 volume: Math.floor(Math.random() * 10000000) + 500000
             };
             
-            // 添加到股票列表
+            // Add to stock list
             userStocks.push(newStock);
             
-            // 更新显示
+            // Update display
             renderStocks();
             
-            // 关闭模态框
+            // Close modal
             closeModal();
             
-            // 显示成功通知
+            // Show success notification
             showNotification(`Stock ${name} (${code}) added successfully!`);
         }
 
-        // 删除股票
+        // Delete single stock
         function deleteStock(symbol) {
             userStocks = userStocks.filter(stock => stock.symbol !== symbol);
             renderStocks();
             showNotification(`Stock ${symbol} deleted`);
         }
 
-        // 渲染股票列表
+        // Delete selected stocks
+        function deleteSelectedStocks() {
+            const selectedCheckboxes = document.querySelectorAll('.stock-checkbox:checked');
+            
+            if (selectedCheckboxes.length === 0) {
+                alert('Please select stocks to delete');
+                return;
+            }
+            
+            const symbolsToDelete = Array.from(selectedCheckboxes).map(checkbox => 
+                checkbox.getAttribute('data-symbol')
+            );
+            
+            userStocks = userStocks.filter(stock => 
+                !symbolsToDelete.includes(stock.symbol)
+            );
+            
+            renderStocks();
+            showNotification(`Deleted ${symbolsToDelete.length} stocks`);
+        }
+
+        // Render stock list
         function renderStocks() {
             const tbody = document.getElementById('stock-data');
             const placeholder = document.getElementById('empty-placeholder');
             
-            // 显示/隐藏空状态
+            // Show/hide empty state
             if (userStocks.length === 0) {
                 placeholder.style.display = 'block';
                 tbody.innerHTML = '';
@@ -1017,6 +780,7 @@
                 
                 const row = document.createElement('tr');
                 row.innerHTML = `
+                    <td><input type="checkbox" class="stock-checkbox" data-symbol="${stock.symbol}"></td>
                     <td>
                         <div class="stock-info">
                             <div class="stock-name">${stock.name}</div>
@@ -1045,7 +809,7 @@
                 tbody.appendChild(row);
             });
             
-            // 添加删除按钮事件监听
+            // Add delete button event listeners
             document.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const symbol = this.getAttribute('data-symbol');
@@ -1054,9 +818,31 @@
                     }
                 });
             });
+            
+            // Add checkbox event listeners
+            document.querySelectorAll('.stock-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectAllState);
+            });
         }
         
-        // 显示通知消息
+        // Update select all checkbox state
+        function updateSelectAllState() {
+            const checkboxes = document.querySelectorAll('.stock-checkbox');
+            const allChecked = checkboxes.length > 0 && 
+                Array.from(checkboxes).every(checkbox => checkbox.checked);
+            
+            selectAllCheckbox.checked = allChecked;
+        }
+        
+        // Select all/deselect all functionality
+        selectAllCheckbox.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.stock-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+        
+        // Show notification message
         function showNotification(message) {
             const toast = document.createElement('div');
             toast.textContent = message;
@@ -1074,12 +860,12 @@
             
             document.body.appendChild(toast);
             
-            // 动画显示
+            // Animate in
             setTimeout(() => {
                 toast.style.opacity = '1';
             }, 10);
             
-            // 3秒后移除
+            // Remove after 3 seconds
             setTimeout(() => {
                 toast.style.opacity = '0';
                 setTimeout(() => {
@@ -1088,28 +874,17 @@
             }, 3000);
         }
 
-        // 添加提交按钮监听
+        // Add submit button listener
         submitBtn.addEventListener('click', addStock);
         
-        // 添加删除按钮监听
-        deleteBtn.addEventListener('click', () => {
-            const selected = document.querySelectorAll('.stock-checkbox:checked');
-            if (selected.length === 0) {
-                alert('Please select stocks to delete');
-                return;
-            }
-            
-            selected.forEach(checkbox => {
-                const symbol = checkbox.getAttribute('data-symbol');
-                deleteStock(symbol);
-            });
-        });
+        // Add delete button listener
+        deleteBtn.addEventListener('click', deleteSelectedStocks);
         
-        // 页面加载后渲染股票数据
+        // Render stocks on page load
         document.addEventListener('DOMContentLoaded', () => {
             renderStocks();
             
-            // 添加键盘事件监听
+            // Add keyboard event listener
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     closeModal();
