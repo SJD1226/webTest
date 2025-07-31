@@ -40,6 +40,8 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
     padding: 25px;
     margin-bottom: 5px;
+    height: 800px;
+   
 }
 
 .panel:last-child {
@@ -56,6 +58,7 @@
     justify-content: space-between;
     border-bottom: 1px solid #f0f3fa;
     padding-bottom: 15px;
+    height: 60px;
 }
 
 /* 我们不再使用.table-con原有的样式 */
@@ -63,6 +66,7 @@
         /* 不设置高度，由内部结构决定 */
         position: relative;
         overflow: hidden; /* 隐藏内部表格的溢出 */
+        /* height: 500px; */
       }
 
       /* 表头表格 */
@@ -73,7 +77,7 @@
 
       /* 表体容器 */
       .table-body-container {
-        height: 500px; /* 固定高度，可以根据需要调整 */
+        /* height: 100px; 固定高度，可以根据需要调整 */
         overflow: hidden;
         position: relative;
       }
@@ -100,6 +104,9 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
+}
+.assets-table thead{
+    height: 20px;
 }
 
 .assets-table th {
