@@ -687,13 +687,7 @@ function updateHoldings(portfolioData) {
         tbody.appendChild(row);
     });
     
-    // 4. 更新现金余额（如果存在）
-    if (portfolioData.cashBalance !== undefined) {
-        const cashSpan = document.querySelector('.cash-balance span');
-        if (cashSpan) {
-            cashSpan.textContent = `现金：${portfolioData.cashBalance}`;
-        }
-    }
+   
 
 }
 
