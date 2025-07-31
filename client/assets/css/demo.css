@@ -61,67 +61,66 @@
     height: 60px;
 }
 
-/* 我们不再使用.table-con原有的样式 */
-      .table-con {
-        /* 不设置高度，由内部结构决定 */
-        position: relative;
-        overflow: hidden; /* 隐藏内部表格的溢出 */
-        /* height: 500px; */
-      }
+/* 固定表格容器高度 */
+.table-con {
+  height: 400px; /* 设置固定高度 */
+  overflow: hidden;
+  position: relative;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
 
-      /* 表头表格 */
-      .table-header {
-        width: 100%;
-        border-collapse: collapse;
-      }
+.table-header-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 10;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
 
-      /* 表体容器 */
-      .table-body-container {
-        /* height: 100px; 固定高度，可以根据需要调整 */
-        overflow: hidden;
-        position: relative;
-      }
+.table-body-container {
+  height: calc(100% - 50px); /* 减去表头高度 */
+  overflow: hidden;
+  position: relative;
+  top: 50px;
+  background-color: #f8f9fc;
+}
 
-      /* 表体表格 */
-      .table-body {
-        width: 100%;
-        border-collapse: collapse;
-        position: absolute;
-        top: 0;
-        left: 0;
-        transition: transform 0.5s ease; /* 平滑过渡效果 */
-      }
-.section-title {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 25px;
-    color: #1a1d28;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #f0f3fa;
+.table-body-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform: translateY(0);
+  transition: transform 0.8s ease-in-out;
 }
 
 .assets-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-.assets-table thead{
-    height: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
 }
 
 .assets-table th {
-    text-align: left;
-    font-size: 14px;
-    color: #6b7280;
-    font-weight: 600;
-    padding: 12px 10px;
-    border-bottom: 1px solid #f0f3fa;
+  text-align: left;
+  padding: 12px 15px;
+  font-size: 14px;
+  color: #4a5568;
+  font-weight: 600;
+  background-color: #f8f9fc;
 }
 
 .assets-table td {
-    padding: 16px 10px;
-    border-bottom: 1px solid #f0f3fa;
-    font-weight: 500;
+  padding: 14px 15px;
+  font-size: 14px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* 行悬停效果 */
+.assets-table tr:not(:first-child):hover {
+  background-color: #f1f5f9;
 }
 
 .asset-name {
