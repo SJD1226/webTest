@@ -640,57 +640,208 @@ function updateTotalProfit(data) {
     }
 }
 
-//更新资产列表
-function updateHoldings(portfolioData) {
-    const holdings = portfolioData.holdings;
+// //更新资产列表
+// function updateHoldings(portfolioData) {
+//     const holdings = portfolioData.holdings;
     
-    // 1. 排序 - 按收益率降序
-    const sortedHoldings = [...holdings].sort((a, b) => b.returnPercent - a.returnPercent);
+//     // 1. 排序 - 按收益率降序
+//     const sortedHoldings = [...holdings].sort((a, b) => b.returnPercent - a.returnPercent);
     
-    // 2. 获取表格tbody元素
-    const tbody = document.querySelector('.table-con tbody');
-    tbody.innerHTML = ''; // 清空现有内容
+//     // 2. 获取表格tbody元素
+//     const tbody = document.querySelector('.table-body tbody');
+//     tbody.innerHTML = ''; // 清空现有内容
     
-    // 3. 生成新行
-    sortedHoldings.forEach((holding, index) => {
-        const row = document.createElement('tr');
+//     // 3. 生成新行
+//     sortedHoldings.forEach((holding, index) => {
+//         const row = document.createElement('tr');
         
-        // 资产名称
-        const nameCell = document.createElement('td');
-        nameCell.className = 'asset-name';
-        nameCell.textContent = holding.symbol;
+//         // 资产名称
+//         const nameCell = document.createElement('td');
+//         nameCell.className = 'asset-name';
+//         nameCell.textContent = holding.symbol;
         
-        // 持仓
-        const positionCell = document.createElement('td');
-        positionCell.textContent = holding.quantity;
+//         // 持仓
+//         const positionCell = document.createElement('td');
+//         positionCell.textContent = holding.quantity;
         
-        // 涨跌幅
-        const changeCell = document.createElement('td');
-        const isPositive = holding.profit >= 0;
-        changeCell.className = isPositive ? 'positive-change' : 'negative-change';
-        changeCell.textContent = `${isPositive ? '+' : ''}${holding.profit.toFixed(2)}`;
+//         // 涨跌幅
+//         const changeCell = document.createElement('td');
+//         const isPositive = holding.profit >= 0;
+//         changeCell.className = isPositive ? 'positive-change' : 'negative-change';
+//         changeCell.textContent = `${isPositive ? '+' : ''}${holding.profit.toFixed(2)}`;
         
-        // 排名
-        const returnPercent = document.createElement('td');
-        const percentisPositive = holding.returnPercent >= 0;
-        returnPercent.className = percentisPositive ? 'positive-change' : 'negative-change';
-        returnPercent.textContent = `${percentisPositive ? '+' : ''}${holding.returnPercent.toFixed(2)}%`;
+//         // 排名
+//         const returnPercent = document.createElement('td');
+//         const percentisPositive = holding.returnPercent >= 0;
+//         returnPercent.className = percentisPositive ? 'positive-change' : 'negative-change';
+//         returnPercent.textContent = `${percentisPositive ? '+' : ''}${holding.returnPercent.toFixed(2)}%`;
         
         
-        // 添加到行
-        row.appendChild(nameCell);
-        row.appendChild(positionCell);
-        row.appendChild(changeCell);
-        row.appendChild(returnPercent);
+//         // 添加到行
+//         row.appendChild(nameCell);
+//         row.appendChild(positionCell);
+//         row.appendChild(changeCell);
+//         row.appendChild(returnPercent);
         
-        // 添加到表格
-        tbody.appendChild(row);
-    });
+//         // 添加到表格
+//         tbody.appendChild(row);
+//     });
     
-   
+//    startAutoScroll(); // 启动自动滚动功能
 
+// }
+// // 滚动动画函数
+// function startAutoScroll() {
+//     const container = document.querySelector('.table-body-container');
+//     const tableBody = document.querySelector('.table-body');
+//     const tbody = document.querySelector('.table-body tbody');
+    
+//     // 清除现有定时器
+//     if (window.scrollAnimation) {
+//         clearInterval(window.scrollAnimation);
+//     }
+    
+//     // 计算必要参数
+//     const rowHeight = tbody.rows[0]?.offsetHeight || 60; // 获取行高
+//     const visibleRows = Math.floor(container.offsetHeight / rowHeight);
+//     const contentHeight = tbody.offsetHeight;
+    
+//     // 如果内容不够长则无需滚动
+//     if (contentHeight <= container.offsetHeight) return;
+    
+//     // 动画逻辑
+//     let position = 0;
+//     const totalScroll = contentHeight - container.offsetHeight + rowHeight;
+    
+//     window.scrollAnimation = setInterval(() => {
+//         position = (position + rowHeight) % (totalScroll + rowHeight);
+//         tableBody.style.transform = `translateY(-${position}px)`;
+//     }, 2000); // 每2秒滚动一次
+// }
+// 全局变量保存滚动状态
+let scrollAnimation = null;
+let isAnimating = true;
+let scrollPosition = 0;
+let rowHeight = 55; // 预估行高，后面会动态计算
+
+function updateHoldings(portfolioData) {
+  const holdings = portfolioData.holdings;
+  
+  // 1. 排序 - 按收益率降序
+  const sortedHoldings = [...holdings].sort((a, b) => b.returnPercent - a.returnPercent);
+  
+  // 2. 获取滚动容器
+  const scrollContent = document.getElementById('scroll-content');
+  scrollContent.innerHTML = ''; // 清空现有内容
+  
+  // 3. 创建表格
+  const table = document.createElement('table');
+  table.className = 'assets-table';
+  
+  // 4. 生成行
+  sortedHoldings.forEach((holding, index) => {
+    const row = document.createElement('tr');
+    
+    // 资产名称
+    const nameCell = document.createElement('td');
+    nameCell.className = 'asset-name';
+    nameCell.textContent = holding.symbol;
+    
+    // 持仓
+    const positionCell = document.createElement('td');
+    positionCell.textContent = holding.quantity;
+    
+    // 涨跌幅
+    const changeCell = document.createElement('td');
+    const isPositive = holding.profit >= 0;
+    changeCell.className = isPositive ? 'positive-change' : 'negative-change';
+    changeCell.textContent = `${isPositive ? '+' : ''}${holding.profit.toFixed(2)}`;
+    
+    // 收益率
+    const returnPercent = document.createElement('td');
+    const percentisPositive = holding.returnPercent >= 0;
+    returnPercent.className = percentisPositive ? 'positive-change' : 'negative-change';
+    returnPercent.textContent = `${percentisPositive ? '+' : ''}${holding.returnPercent.toFixed(2)}%`;
+    
+    // 添加到行
+    row.appendChild(nameCell);
+    row.appendChild(positionCell);
+    row.appendChild(changeCell);
+    row.appendChild(returnPercent);
+    
+    // 添加到表格
+    table.appendChild(row);
+  });
+  
+  // 将表格添加到滚动容器
+  scrollContent.appendChild(table);
+  
+  // 4. 更新现金余额
+  if (portfolioData.cashBalance !== undefined) {
+    const cashSpan = document.querySelector('.cash-balance span');
+    if (cashSpan) {
+      cashSpan.textContent = `现金：${portfolioData.cashBalance}`;
+    }
+  }
+  
+  // 5. 设置滚动动画
+  setupScrollAnimation();
 }
 
+function setupScrollAnimation() {
+  // 清除现有动画
+  if (scrollAnimation) {
+    cancelAnimationFrame(scrollAnimation);
+  }
+  
+  const wrapper = document.querySelector('.table-body-wrapper');
+  const content = document.getElementById('scroll-content');
+  
+  // 计算行高
+  if (content.querySelector('tr')) {
+    rowHeight = content.querySelector('tr').offsetHeight;
+  }
+  
+  // 计算容器高度和内容高度
+  const containerHeight = document.querySelector('.table-body-container').offsetHeight;
+  const contentHeight = content.offsetHeight;
+  
+  // 如果内容高度小于容器高度，不需要滚动
+  if (contentHeight <= containerHeight) {
+    wrapper.style.transform = 'translateY(0)';
+    return;
+  }
+  
+  // 设置初始位置
+  scrollPosition = 0;
+  wrapper.style.transform = 'translateY(0)';
+  
+  // 动画循环
+  function animate() {
+    if (!isAnimating) return;
+    
+    scrollPosition += 0.3; // 控制滚动速度（值越大滚动越快）
+    
+    // 当滚动超出内容时，重置到顶部
+    if (scrollPosition > contentHeight) {
+      scrollPosition = 0;
+      // 瞬间重置位置，无明显视觉跳转
+      wrapper.style.transition = 'none';
+      wrapper.style.transform = `translateY(0)`;
+      requestAnimationFrame(() => {
+        wrapper.style.transition = 'transform 0.8s ease-in-out';
+      });
+    }
+    
+    wrapper.style.transform = `translateY(-${scrollPosition}px)`;
+    
+    scrollAnimation = requestAnimationFrame(animate);
+  }
+  
+  // 开始动画
+  isAnimating = true;
+  animate();
+}
 async function fetchAssetAllocationData() {
     try {
         const response = await fetch('http://localhost:3001/api/portfolio/asset-allocation');
