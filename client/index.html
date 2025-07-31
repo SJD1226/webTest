@@ -52,9 +52,7 @@
 
         <!-- 区域一 -->
         <div class="dashboard-container-financial">
-            <div class="financial-dashboard">
-                
-                
+            <div class="financial-dashboard" style="width: 1000px; height:600px">
                 <!-- 资产概览 -->
                 <div class="asset-summary">
                     <div class="asset-item">
@@ -143,40 +141,45 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 自选股票 -->
+            <div class="iframe-container" >
+                    <div class="loading-indicator">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <iframe src="info_selectstock.html" title="市场概览" style="width: 800px; height: 600px; border: none;"></iframe>
+            </div>
         </div>
+
         <!-- 区域二 -->
         <div class="dashboard-container">
-            <div class="panel">
+            <!-- 日历面板 -->
+            <div class="panel" style="width: 400px; height: 650px; border: none;" >
                 <div class="panel-title">Profit Distribution</div>
-                <!-- 日历面板 -->
-            <div class="calendar-container" style="width: 700px;  border: none;">
-            <div class="calendar-header">
-                <div class="calendar-title">2025.7</div>
-                <div class="calendar-arrows">
-                    <div class="arrow-btn"><i class="fas fa-chevron-left"></i></div>
-                    <div class="arrow-btn"><i class="fas fa-chevron-right"></i></div>
-                </div>
-            </div>
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <div class="calendar-title">2025.7</div>
+                                <div class="calendar-arrows"></div>
+                        </div>
             
-            <!-- 星期标题 -->
-            <div class="calendar-grid">
-                <div class="day-header">一</div>
-                <div class="day-header">二</div>
-                <div class="day-header">三</div>
-                <div class="day-header">四</div>
-                <div class="day-header">五</div>
-                <div class="day-header">六</div>
-                <div class="day-header">日</div>
+                        <!-- 星期标题 -->
+                        <div class="calendar-grid" >
+                            <div class="day-header">一</div>
+                            <div class="day-header">二</div>
+                            <div class="day-header">三</div>
+                            <div class="day-header">四</div>
+                            <div class="day-header">五</div>
+                            <div class="day-header">六</div>
+                            <div class="day-header">日</div>
+                        </div>
+                        
+                        <!-- 日历内容容器 -->
+                        <div id="calendarGrid" class="calendar-grid"></div>
+                    </div>
             </div>
-            
-            <!-- 日历内容容器 -->
-            <div id="calendarGrid" class="calendar-grid"></div>
-           </div>
 
-        <!-- 中列：雷达图和资产列表 -->
-            
-        </div>
-        <div class="dashboard-section">
+            <!-- 雷达图 -->
+            <div class="dashboard-section" >
                 <!-- 雷达图面板内容 -->
                         <!-- 资产列表面板内容 -->
                         
@@ -222,68 +225,9 @@
                     </div> -->
                 </div>
             </div>
-        </div>
 
-    <!--temp2-->
-        <div class="dashboard-container">
-                <!-- 左列：收益分布 -->
-            <div class="iframe-container">
-                    <div class="loading-indicator">
-                        <div class="loading-spinner"></div>
-                    </div>
-                    <iframe src="info_selectstock.html" title="市场概览" style="width: 800px; height: 1000px; border: none;"></iframe>
-            </div>
- 
-        <div class="dashboard-section">
-
-                
-                <!-- <div class="header">
-                    <div class="tabs">
-                        <div class="tab-item active">今日行情</div>
-                    </div>
-                </div>
-                
-                <div class="category-tabs">
-                    <div class="category-tab active">沪深</div>
-                    <div class="category-tab">港股</div>
-                    <div class="category-tab">美股</div>
-                    <div class="category-tab">黄金</div>
-                    <div class="category-tab">国内债</div>
-                </div>
-                
-                <div class="time-container">
-                    <div class="trade-time">交易中 2025-07-25 11:03</div>
-                </div>
-                
-                <div class="indices-container">
-                    <div class="index-card">
-                        <div class="index-name">上证指数</div>
-                        <div class="index-value">3593.25</div>
-                        <div class="index-change negative">
-                            <span>-12.48</span>
-                            <span>-0.35%</span>
-                        </div>
-                    </div>
-                    
-                    <div class="index-card">
-                        <div class="index-name">深证成指</div>
-                        <div class="index-value">11155.52</div>
-                        <div class="index-change negative">
-                            <span>-37.54</span>
-                            <span>-0.34%</span>
-                        </div>
-                    </div>
-                    
-                    <div class="index-card">
-                        <div class="index-name">创业板指</div>
-                        <div class="index-value">2336.72</div>
-                        <div class="index-change negative">
-                            <span>-8.64</span>
-                            <span>-0.37%</span>
-                        </div>
-                    </div>
-                </div> -->
-                <!-- 【新的】全球指数行情栏 -->
+            <!-- 【新的】全球指数行情栏 -->
+            <div class="dashboard-section" style="width: 500px; height: 650px; border: none;">
                 <div class="dashboard-section">
                     <h2 class="section-title">Global Market Indexes</h2>
                     
@@ -298,8 +242,8 @@
                         <!-- ... 市场总览的现有内容 ... -->
                     </div>
                 </div>
-                </div>
-
+            </div>
+        </div>
 
     <!-- 引入JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
